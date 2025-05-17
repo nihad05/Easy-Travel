@@ -26,5 +26,5 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: pr.number,
                 body: newBody,
-            });
-          }
+              });
+            }
