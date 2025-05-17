@@ -1,0 +1,25 @@
+name: Description Adder merging PRs
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  notify-on-alpha-merge:
+    if: github.event.pull_request.merged == true &&
+        github.event.pull_request.base.ref == 'master' &&
+        github.event.pull_request.head.ref == 'alpha
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add comment on merged PR
+        uses: actions/github-script@7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "✅ Alpha changes merged to master!"
+            });
