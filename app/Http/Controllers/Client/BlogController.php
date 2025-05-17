@@ -20,11 +20,11 @@ class BlogController extends Controller
         $recoBlogs = Blog::query()->orderBy('id', 'asc')->take(5)->get();
         return view('client.blogs.index', compact(['blogs', 'recoBlogs', 'title', 'category']));
     }
-    public function details($id)
+    public function details($id): View
     {
         $blog = Blog::with('author')->where('id', $id)->first();
         if (auth()->user() && auth()->user() != null) {
-            $image = User::findOrFail(auth()->id())->image;
+            $image = User::query()->findOrFail(auth()->id())->image;
         }
         $title = $blog->name;
         $comments = Comment::with('users')->where('entity_type', 'blog')->where('entity_id', $id)->get();
