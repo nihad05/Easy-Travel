@@ -8,6 +8,7 @@ use App\Models\BlogCategory;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BlogController extends Controller
 {
@@ -16,10 +17,10 @@ class BlogController extends Controller
         $title = 'Blogs';
         $blogs = Blog::with('comments')->paginate(5);
         $category = BlogCategory::all();
-        $recoBlogs = Blog::orderBy('id', 'asc')->take(5)->get();
+        $recoBlogs = Blog::query()->orderBy('id', 'asc')->take(5)->get();
         return view('client.blogs.index', compact(['blogs', 'recoBlogs', 'title', 'category']));
     }
-    public function details($id)
+    public function details($id): View
     {
         $blog = Blog::with('author')->where('id', $id)->first();
         if (auth()->user() && auth()->user() != null) {
