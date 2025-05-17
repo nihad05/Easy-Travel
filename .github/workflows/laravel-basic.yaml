@@ -1,0 +1,6 @@
+name: Laravel Push
+
+on:
+  push:
+    branches:
+      - alpha
