@@ -4,13 +4,16 @@ on:
   pull_request:
     types:
       - opened
-      - edited
       - synchronize
+    branches:
+      - master
 
 jobs:
   update-description:
     if: github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'alpha'
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Update PR description
@@ -18,13 +21,22 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
-            const newBody = `This pull request is created from \`${pr.head.ref}\` to \`${pr.base.ref}\`.`;
+            const existingBody = pr.body || '';
+            const newBody = `This pull request is created from \`${pr.head.ref}\` to \`${pr.base.ref}\`.\n\n${existingBody}`.trim();
 
-            if (pr.body !== newBody) {
-              await github.rest.pulls.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pr.number,
-                body: newBody,
-              });
+            try {
+              if (pr.body !== newBody) {
+                await github.rest.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  body: newBody,
+                });
+                console.log('PR description updated successfully.');
+              } else {
+                console.log('No update needed; description is already correct.');
+              }
+            } catch (error) {
+              console.error('Failed to update PR description:', error);
+              core.setFailed(`Error updating PR description: ${error.message}`);
             }
