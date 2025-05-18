@@ -79,8 +79,8 @@ class RequestController extends Controller
 
         $request->update(['status' => 1]);
 
-        $link = to_route('tourPlan.create', ['id' => $request->id, 'step' => 2]);
-        $body = "Your tour has approved successfully please enter this link : <br>" . $link;
+        $link = route('tourPlan.create', ['id' => $request->id, 'step' => 2]);
+        $body = "Your tour has been approved successfully. Please click this link: <br> <a href=\"$link\">Click</a>";
 
         Mail::send('Mail.index', compact('body'), function ($mail) use ($request) {
             $mail->to($request->host->email)->subject("Tour Plan Approved");

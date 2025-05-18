@@ -109,3 +109,5 @@ Route::group(['as' => 'selection.', 'prefix' => 'selection'], function () {
 
 
 \Illuminate\Support\Facades\Auth::routes();
+Route::get('/register/confirm/{id}', [\App\Http\Controllers\Auth\RegisterController::class, 'confirmRegister'])
+    ->name('confirmRegister');

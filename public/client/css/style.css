@@ -589,8 +589,8 @@ nav img {
     align-items: center;
     padding: 10px 16px;
     transition: 0.2s;
-    margin-top: 70px;
-    margin-left: 180px;
+    /*margin-top: 70px;*/
+    /*margin-left: 180px;*/
 }
 .placesTextv2 {
     padding-right: 90%;
@@ -644,7 +644,7 @@ nav img {
     align-items: center;
 }
 .propertyLink {
-    width: 40%;
+    width: 70%;
     margin-top: 15px;
     display: flex;
     padding: 8px 12px;

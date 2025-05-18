@@ -16,17 +16,27 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Property;
 use App\Models\PropertyFile;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DetailsController extends Controller
 {
-    public function place($id)
+    public function place($id)//: View
     {
-        $details = Place::findOrFail($id);
-        $images = PlaceFiles::where('place_id', $id)->get();
-        $recommendedPlaces = Place::inRandomOrder()->limit(4)->get();
-        $recGuide = User::with('guides')->where('role', 'guide')->inRandomOrder()->limit(3)->get();
-        $safety = "";
-        $fun = "";
+        $details = Place::query()->findOrFail($id);
+        $images = PlaceFiles::query()->where('place_id', $id)->get();
+        $recommendedPlaces = Place::query()
+            ->whereHas('homeImage')
+            ->with('homeImage')
+            ->limit(4)
+            ->get();
+
+        $recGuide = User::query()
+            ->with('guides')
+            ->where('role', 'guide')
+            ->inRandomOrder()
+            ->limit(3)
+            ->get();
+
         $title = $details->name;
 
         if ($details->safety >= 0 && $details->safety <= 20) {
@@ -51,16 +61,26 @@ class DetailsController extends Controller
         } else {
             $fun = "Great";
         }
-        if (auth()->user() && auth()->user() != null) {
-            $image = User::findOrFail(auth()->id())->image;
-        }
-        $comments = Comment::with('users')->where('entity_id', $id)->where('entity_type', 'place')->get();
-        if (auth()->user() && auth()->user() != null) {
-            return view('client.details.place.index', compact(['details', 'title', 'image', 'safety', 'images', 'comments', 'recGuide', 'recommendedPlaces', "fun"]));
-        } else {
-            return view('client.details.place.index', compact(['title', 'details', 'safety', 'images', 'comments', 'recGuide', 'recommendedPlaces', "fun"]));
-        }
 
+        $comments = Comment::query()
+            ->with('users')
+            ->where('entity_id', $id)
+            ->where('entity_type', 'place')
+            ->get();
+
+            return view(
+                'client.details.place.index',
+                compact([
+                    'details',
+                    'title',
+                    'safety',
+                    'images',
+                    'comments',
+                    'recGuide',
+                    'recommendedPlaces'
+                    , "fun"
+                ])
+            );
     }
 
     public function property($id)
