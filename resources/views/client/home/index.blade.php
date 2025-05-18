@@ -173,7 +173,7 @@ $title = 'Home';
                 <div class="propertiesContent">
                     <div class="placeRow">
                         <h2>
-                            <a href="{{route("home.property",['id'=>$item->id])}}">
+                            <a href="{{ route("home.property",['id'=>$item->id]) }}">
                                 {{$item->name}}
                             </a>
                         </h2>
