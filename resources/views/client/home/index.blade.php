@@ -211,7 +211,7 @@ $title = 'Home';
                             <img src="{{ asset("/images/bath.svg") }}" alt=""> {{$item->bath_count}} Bath
                         </div>
                         <div class="bed">
-                            <img src="{{asset("/images/sqft.svg")}}" alt=""> {{$item->sqft_count}} sqft
+                            <img src="{{ asset("/images/sqft.svg") }}" alt=""> {{$item->sqft_count}} sqft
                         </div>
                     </div>
                     <div class="hotelText">
