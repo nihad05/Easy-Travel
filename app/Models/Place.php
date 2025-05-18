@@ -39,4 +39,15 @@ class Place extends Model
         return $this->hasOne(Selection::class, 'entity_id', 'id')
             ->where('entity_type', 'place')->where('user_id', auth()->id());
     }
+
+    public function homeImage(): HasOne
+    {
+        return $this->hasOne(PlaceFiles::class, 'place_id', 'id')
+            ->where('show_home', 1);
+    }
+
+    public function getImageAttribute()
+    {
+        return $this->homeImage?->image;
+    }
 }

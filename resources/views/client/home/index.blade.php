@@ -143,8 +143,8 @@ $title = 'Home';
                                         Price: <span class="placePrice">{{$item->price}}$</span>
                                     </span>
                                 </div>
-                                <div>
-                                    <a class="placeDetailsLink " href="{{route('home.place',['id'=>$item->id])}}">View Details</a>
+                                <div style="display: flex; align-items: end;">
+                                    <a class="placeDetailsLink " href="{{ route('home.place',['id'=>$item->id]) }}">View Details</a>
                                 </div>
                             </div>
                         </div>

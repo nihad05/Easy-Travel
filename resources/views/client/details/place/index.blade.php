@@ -4,7 +4,7 @@
     <div class="detailsSwiperContainer">
         <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper mySwiper2">
             <div class="swiper-wrapper">
-                
+
                 @foreach ($images as $item)
                 <div class="swiper-slide">
                     <img src="{{asset("/images/imgs/$item->image")}}"/>
@@ -99,7 +99,7 @@
                     <div class="commentDiv">
                         <div class="userComment">
                             <div class="userCommentImage">
-                                <img src="{{asset("/images/userImgs/$image")}}" alt="">
+                                <img src="{{asset("/images/userImgs/" . Auth::user()->image)}}" alt="">
                             </div>
                             <form  action="{{route('home.comments.placeComment',['id'=>$details->id])}}" method="POST">
                                 @csrf
@@ -121,11 +121,10 @@
                 <h2>Recommended Places</h2>
                 <div class="recommenedPlaces">
                     @foreach($recommendedPlaces as $item)
-
                         <div class="recommenedPlacesRow">
-                         <img class="placeRecommendedImage" src="{{asset("/images/imgs/$item->image")}}" alt="">
+                         <img class="placeRecommendedImage" src="{{asset("/images/imgs/{$item->homeImage->image}")}}" alt="">
                          <div>
-                            <a style="color: black" href="{{route('home.place',['id'=>$item->id])}}">
+                            <a style="color: black" href="{{ route('home.place', $item->id) }}">
                                 <h3>{{$item->name}}</h3>
                             </a>
                              <p>
