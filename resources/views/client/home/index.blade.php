@@ -196,7 +196,7 @@ $title = 'Home';
                         </div>
                     </div>
                     <p style="padding-bottom: 10px; display: flex; align-items: center;">
-                        <img src="{{asset("/images/location.svg")}}" alt=""> <span class="location">{{$item->location}}</span>
+                        <img src="{{ asset("/images/location.svg") }}" alt=""> <span class="location">{{$item->location}}</span>
                     </p>
                     <span>
                         <span class="propertyPrice">
