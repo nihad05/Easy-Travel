@@ -173,7 +173,7 @@ $title = 'Home';
                 <div class="propertiesContent">
                     <div class="placeRow">
                         <h2>
-                            <a href="{{route("home.property",['id'=>$item->id])}}">
+                            <a href="{{ route("home.property",['id'=>$item->id]) }}">
                                 {{$item->name}}
                             </a>
                         </h2>
@@ -188,15 +188,15 @@ $title = 'Home';
                                 <img src="{{asset("/images/heart.svg")}}" alt="">
                             </a>
                             @elseif($item->selections!=null && $item->selections->user_id==auth()->id())
-                            <a href="{{route('selection.deleteProperty',['id'=>$item->id])}}">
-                            <img src="{{asset("/images/redHeart.svg")}}" alt="">
+                            <a href="{{ route('selection.deleteProperty',['id'=>$item->id]) }}">
+                            <img src="{{ asset("/images/redHeart.svg") }}" alt="">
                             </a>
                             @endif
                             @endguest
                         </div>
                     </div>
                     <p style="padding-bottom: 10px; display: flex; align-items: center;">
-                        <img src="{{asset("/images/location.svg")}}" alt=""> <span class="location">{{$item->location}}</span>
+                        <img src="{{ asset("/images/location.svg") }}" alt=""> <span class="location">{{$item->location}}</span>
                     </p>
                     <span>
                         <span class="propertyPrice">
@@ -205,13 +205,13 @@ $title = 'Home';
                     </span>
                     <div class="propertyRow">
                         <div class="bed">
-                            <img src="{{asset("/images/bed.svg")}}" alt=""> {{$item->bed_count}} bed
+                            <img src="{{ asset("/images/bed.svg") }}" alt=""> {{$item->bed_count}} bed
                         </div>
                         <div class="bed">
-                            <img src="{{asset("/images/bath.svg")}}" alt=""> {{$item->bath_count}} Bath
+                            <img src="{{ asset("/images/bath.svg") }}" alt=""> {{$item->bath_count}} Bath
                         </div>
                         <div class="bed">
-                            <img src="{{asset("/images/sqft.svg")}}" alt=""> {{$item->sqft_count}} sqft
+                            <img src="{{ asset("/images/sqft.svg") }}" alt=""> {{$item->sqft_count}} sqft
                         </div>
                     </div>
                     <div class="hotelText">
