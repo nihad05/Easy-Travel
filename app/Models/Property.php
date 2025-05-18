@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Property extends Model
 {
@@ -44,10 +45,15 @@ class Property extends Model
             ->join('supplies', 'supplies.id', 'property_supplies.supply_id');
     }
 
-    public function image()
+    public function homeImage(): HasOne
     {
         return $this->hasOne(PropertyFile::class, 'property_id', 'id')
             ->where('show_home', 1);
+    }
+
+    public function getImageAttribute()
+    {
+        return $this->homeImage?->image;
     }
 
     public function tour_property()

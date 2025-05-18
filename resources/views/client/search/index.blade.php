@@ -79,7 +79,7 @@
                 </div>
             </div>
         @endforeach
-       
+
         @else
         <div class="color-changing-text">
             <span>S</span><span>o</span><span>r</span><span>r</span><span>y</span>
@@ -98,8 +98,8 @@
             @else
                 <li><a href="{{ $place->previousPageUrl() }}" rel="prev">&laquo;</a></li>
             @endif
-    
-            
+
+
             @for ($i = 1; $i <= $place->lastPage(); $i++)
             @if ($i == $place->currentPage())
                 <li class="active"><span>{{ $i }}</span></li>
@@ -107,7 +107,7 @@
                 <li><a href="{{ $place->url($i) }}">{{ $i }}</a></li>
             @endif
         @endfor
-    
+
             @if ($place->hasMorePages())
                 <li><a href="{{ $place->nextPageUrl() }}" rel="next">&raquo;</a></li>
             @else

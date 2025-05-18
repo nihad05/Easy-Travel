@@ -135,7 +135,7 @@
                     <div class="recommenedPlaces">
                         @foreach ($recoProperty as $item)
                             @php
-                            $image = $item->image->image;
+                            $image = $item->homeImage->image;
                             @endphp
                         <div class="recommenedPlacesRow">
                                 <img class="placeRecommendedImage" src="{{asset("images/imgs/$image")}}" alt="">

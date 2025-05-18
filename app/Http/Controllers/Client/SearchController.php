@@ -15,7 +15,6 @@ class SearchController extends Controller
     public function searchMain(Request $request)
     {
         $places = new Place;
-        // if ($request->name != null || $request->location != null || $request->minPrice != null || $request->maxPrice != null) {
         $places = app(Pipeline::class)
             ->send($places)
             ->through([
@@ -25,11 +24,8 @@ class SearchController extends Controller
                 \App\queryFilter\MaxPrice::class,
             ])
             ->thenReturn();
-
         $place = $places->paginate(8);
-        // } else {
-        // return back()->with('error', "Fill some input");
-        // }
+
         $title = 'Search';
         return view('client.search.index', compact('place', 'title'));
     }
@@ -44,8 +40,10 @@ class SearchController extends Controller
                 \App\queryFilterProperty\MinPrice::class,
             ])
             ->thenReturn();
+
         $property = $properties->paginate(8);
         $title = 'Search';
+
         return view('client.search.property', compact('property', 'title'));
 
     }

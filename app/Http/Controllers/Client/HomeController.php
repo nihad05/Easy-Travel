@@ -36,7 +36,7 @@ class HomeController extends Controller
             ->get();
 
         $properties = Property::query()
-            ->with(['comments', 'selections', 'image'])
+            ->with(['comments', 'selections', 'homeImage'])
             ->skip(0)->take(4)
             ->get();
 

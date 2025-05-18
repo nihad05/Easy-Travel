@@ -20,7 +20,7 @@ class PropertyController extends Controller
      */
     public function index(): Application|Factory|View
     {
-        $place = Property::query()->with('image')->fastPaginate(6);
+        $place = Property::query()->with('homeImage')->fastPaginate(6);
         $supplies = Supply::query()->get();
 
         return view('admin.property.index', compact(['place', 'supplies']));
@@ -142,7 +142,7 @@ class PropertyController extends Controller
 
 
         $item = Property::query()
-            ->with('image') //ile
+            ->with('homeImage') //ile
 //            ->with(['supplies:property_id,supply_id', 'image']) //left join
 ////            ->with('supplies', function ($query) {
 ////                $query->select('property_id', 'supply_id');
@@ -154,7 +154,6 @@ class PropertyController extends Controller
 //            ->whereHas()
             ->find($id);
 
-        return $item;
         $supplies  = Supply::query()->get();
 
         return view('admin.property.edit', compact('item', 'supplies'));
