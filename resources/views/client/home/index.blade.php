@@ -188,8 +188,8 @@ $title = 'Home';
                                 <img src="{{asset("/images/heart.svg")}}" alt="">
                             </a>
                             @elseif($item->selections!=null && $item->selections->user_id==auth()->id())
-                            <a href="{{route('selection.deleteProperty',['id'=>$item->id])}}">
-                            <img src="{{asset("/images/redHeart.svg")}}" alt="">
+                            <a href="{{ route('selection.deleteProperty',['id'=>$item->id]) }}">
+                            <img src="{{ asset("/images/redHeart.svg") }}" alt="">
                             </a>
                             @endif
                             @endguest
