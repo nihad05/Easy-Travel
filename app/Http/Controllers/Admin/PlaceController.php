@@ -19,7 +19,7 @@ class PlaceController extends Controller
      *
      * @return Response|Factory|View
      */
-    public function index(): Response|Factory|View
+    public function index()//: Response|Factory|View
     {
         $place = Place::query()
             ->from('places as p')

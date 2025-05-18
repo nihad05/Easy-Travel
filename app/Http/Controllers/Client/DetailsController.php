@@ -100,7 +100,7 @@ class DetailsController extends Controller
 
 
         $recoProperty = Property::query()
-            ->with('image')
+            ->with('homeImage')
             ->limit(4)
             ->inRandomOrder()
             ->get();

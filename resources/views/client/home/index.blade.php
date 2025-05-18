@@ -58,7 +58,7 @@ $title = 'Home';
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
                 </form>
-                <form class="propertySearhCard " action="{{route('home.search.searchProperty')}}">
+                <form class="propertySearhCard " action="{{ route('home.search.searchProperty') }}">
                     <div class="searchCard-1">
                         <p>Keyword</p>
                         <input type="search" name="name"  placeholder="Search...">
@@ -166,7 +166,7 @@ $title = 'Home';
         <div class="propertiesContainer">
             @foreach ($properties as $item)
                 @php
-                    $image = $item->image->image;
+                    $image = $item->homeImage->image;
                 @endphp
             <div class="properties">
                <a href="{{route("home.property",['id'=>$item->id])}}"> <img class="hotelMainImg" src="{{asset("/images/imgs/$image")}}" alt=""></a>

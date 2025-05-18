@@ -115,7 +115,7 @@
                         <tbody>
                            @foreach ($place as $item)
                                @php
-                                   $image = $item->image->image;
+                                   $image = $item->homeImage->image;
                                @endphp
                            <tr>
                                 <td>{{$loop->iteration}}</td>
