@@ -1322,6 +1322,7 @@ footer {
     background: #0000004e;
 }
 .modal {
+    overflow: scroll;
     width: 35%;
     height: 85%;
     transform: translate(-200%);
@@ -1477,6 +1478,7 @@ footer {
     background: #0000004e;
 }
 .modal2 {
+    overflow: scroll;
     width: 35%;
     height: 85%;
     transform: translate(-200%);
