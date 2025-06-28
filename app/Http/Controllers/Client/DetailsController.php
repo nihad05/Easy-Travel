@@ -20,7 +20,7 @@ use Illuminate\View\View;
 
 class DetailsController extends Controller
 {
-    public function place($id)//: View
+    public function place($id): View
     {
         $details = Place::query()->findOrFail($id);
         $images = PlaceFiles::query()->where('place_id', $id)->get();
@@ -148,24 +148,65 @@ class DetailsController extends Controller
         ]));
 
     }
+
     public function guide($id)
     {
-        $guide = User::with("guides")->where('id', $id)->first();
+        $guide = User::query()
+            ->with("guides")
+            ->where('id', $id)
+            ->first();
+
         if (auth()->user() && auth()->user() != null) {
-            $image = User::findOrFail(auth()->id())->image;
+            $image = User::query()->findOrFail(auth()->id())->image;
         }
+
         $language = $guide->guides->languages;
         $languages = json_decode($language, true);
         $availble = $guide->guides->aviable_for;
         $availble_for = json_decode($availble, true);
-        $guides = User::with('guides')->where('role', 'guide')->skip(0)->take(3)->get();
-        $places = Place::inRandomOrder()->limit(4)->get();
-        $comments = Comment::with('users')->where('entity_id', $id)->where('entity_type', 'guide')->get();
+
+        $guides = User::query()
+            ->with('guides')
+            ->where('role', 'guide')
+            ->skip(0)
+            ->take(3)
+            ->get();
+
+        $places = Place::query()->inRandomOrder()->limit(4)->get();
+        $comments = Comment::query()
+            ->with('users')
+            ->where('entity_id', $id)
+            ->where('entity_type', 'guide')
+            ->get();
         $title = $guide->name;
+
         if (auth()->user() && auth()->user() != null) {
-            return view('client.details.guide.index', compact(['image', 'title', 'guide', 'languages', 'availble_for', 'comments', 'places', 'guides']));
+            return view(
+                'client.details.guide.index',
+                compact([
+                    'image',
+                    'title',
+                    'guide',
+                    'languages',
+                    'availble_for',
+                    'comments',
+                    'places',
+                    'guides',
+                    ])
+            );
         } else {
-            return view('client.details.guide.index', compact(['guide', 'title', 'languages', 'availble_for', 'comments', 'places', 'guides']));
+            return view(
+                'client.details.guide.index',
+                compact([
+                    'title',
+                    'guide',
+                    'languages',
+                    'availble_for',
+                    'comments',
+                    'places',
+                    'guides',
+                ])
+            );
         }
     }
 
@@ -187,7 +228,7 @@ class DetailsController extends Controller
         $user = TourUser::query()->where(['tour_id' => $id, 'user_id' => auth()->id()])->first();
 
         $tour = Tour::withTrashed()
-            ->with(['hotels.hotel.image', 'guides.guide', 'host', 'transports'])
+            ->with(['hotels.hotel.homeImage', 'guides.guide', 'host', 'transports'])
             ->where('id', $id)
             ->first();
 
