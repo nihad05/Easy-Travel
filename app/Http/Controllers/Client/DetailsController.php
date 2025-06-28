@@ -20,7 +20,7 @@ use Illuminate\View\View;
 
 class DetailsController extends Controller
 {
-    public function place($id)//: View
+    public function place($id): View
     {
         $details = Place::query()->findOrFail($id);
         $images = PlaceFiles::query()->where('place_id', $id)->get();

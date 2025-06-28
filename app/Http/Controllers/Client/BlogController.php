@@ -15,19 +15,34 @@ class BlogController extends Controller
     public function index()
     {
         $title = 'Blogs';
-        $blogs = Blog::with('comments')->paginate(5);
+        $blogs = Blog::query()
+            ->with('comments')
+            ->paginate(5);
+
         $category = BlogCategory::all();
-        $recoBlogs = Blog::query()->orderBy('id', 'asc')->take(5)->get();
+
+        $recoBlogs = Blog::query()
+            ->orderBy('id')
+            ->take(5)
+            ->get();
+
         return view('client.blogs.index', compact(['blogs', 'recoBlogs', 'title', 'category']));
     }
     public function details($id): View
     {
         $blog = Blog::with('author')->where('id', $id)->first();
+
         if (auth()->user() && auth()->user() != null) {
             $image = User::query()->findOrFail(auth()->id())->image;
         }
+
         $title = $blog->name;
-        $comments = Comment::with('users')->where('entity_type', 'blog')->where('entity_id', $id)->get();
+        $comments = Comment::query()
+            ->with('users')
+            ->where('entity_type', 'blog')
+            ->where('entity_id', $id)
+            ->get();
+
         if (auth()->user() && auth()->user() != null) {
             return view('client.blogs.details', compact(['image', 'blog', 'comments', 'title']));
         } else {
