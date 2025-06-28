@@ -80,7 +80,7 @@
                 @foreach ($tour->hotels as $item)
                 <div class="bookedPlacesContainer">
                     <div class="bookedPlaces">
-                            <img class="bookedPlaceImgs" src="{{ asset('/images/imgs/' . $item->hotel->image->image) }}" alt="">
+                            <img class="bookedPlaceImgs" src="{{ asset('/images/imgs/' . $item->hotel->homeImage->image) }}" alt="">
                             <div class="bookedPlaceContent">
                                 <a href="{{route("home.place", $item->hotel->id)}}">
                                     <p>{{ $item->hotel->name }}</p>
