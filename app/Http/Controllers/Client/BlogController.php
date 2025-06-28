@@ -7,12 +7,13 @@ use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\Comment;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $title = 'Blogs';
         $blogs = Blog::query()
@@ -51,7 +52,8 @@ class BlogController extends Controller
     }
     public function create(Request $request)
     {
-        $user = User::findOrFail(auth()->id());
+        $user = User::query()->findOrFail(auth()->id());
+
         if ($user->role == 'guide') {
             $c_id = '3';
         } elseif ($user->role == 'host') {
@@ -81,7 +83,7 @@ class BlogController extends Controller
             return back()->with('success', 'Your blog has added successfully');
         }
     }
-    public function search()
+    public function search(): JsonResponse
     {
         if (request()->has('category') && request()->get('category') != null) {
             $params = request()->get('category');
