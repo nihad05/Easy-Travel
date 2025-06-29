@@ -4,16 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tour;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AdminTourController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $tours = Tour::with('host')->paginate(6);
+        $tours = Tour::query()->with('host')->paginate(6);
+
         return view('admin.tours.index', compact(['tours']));
     }
-    public function editPage(Request $request, $id)
+    public function editPage(Request $request, $id): View
     {
         $tour = Tour::query()->findOrFail($id);
         $places = json_decode($tour->travel_places);
@@ -136,11 +139,12 @@ class AdminTourController extends Controller
                 'name' => 'Bus',
             ]
         ];
+
         return view('admin.tours.edit', compact(['tour', 'places', 'transport', 'arr', 'arr2']));
     }
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $id): RedirectResponse
     {
-        $tour = Tour::findOrFail($id);
+        $tour = Tour::query()->findOrFail($id);
         $request->validate([
             'name' => ['string'],
             'about' => ['string'],
