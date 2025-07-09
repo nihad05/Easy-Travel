@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use Illuminate\View\View;
 use Illuminate\Http\{Request, RedirectResponse};
 
 
@@ -14,7 +15,7 @@ class BlogCommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $comments = Comment::query()
             ->where('entity_type', 'blog')

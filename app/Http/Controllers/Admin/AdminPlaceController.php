@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Place;
 use App\Models\PlaceFiles;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class AdminPlaceController extends Controller
 {
@@ -79,12 +81,11 @@ class AdminPlaceController extends Controller
     //     $delete = Place::findOrFail($place)->delete();
     //     return back();
     // }
-    public function edit($place)
+    public function edit($place): View
     {
 
-        $place = Place::findOrFail($place);
-        $safety = "";
-        $fun = "";
+        $place = Place::query()->findOrFail($place) ?? 1;
+
         if ($place->safety >= 0 && $place->safety <= 20) {
             $safety = "Bad";
         } elseif ($place->safety >= 21 && $place->safety <= 40) {
@@ -107,11 +108,12 @@ class AdminPlaceController extends Controller
         } else {
             $fun = "Great";
         }
+
         return view('admin.place.editPlace', compact(['place', 'fun', 'safety']));
     }
-    public function update(Request $request, $place)
+    public function update(Request $request, $place): View
     {
-        $editedPlace = Place::findOrFail($place);
+        $editedPlace = Place::query()->findOrFail($place);
         $img = $editedPlace->image;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -159,14 +161,14 @@ class AdminPlaceController extends Controller
         $editedPlace->update($editArr);
         return back()->with('success', 'Place edited successfully');
     }
-    public function index($id)
+    public function index($id): View
     {
-        $files = PlaceFiles::where('place_id', $id)->get();
-        $name = Place::where('id', $id)->first()->name;
+        $files = PlaceFiles::query()->where('place_id', $id)->get();
+        $name = Place::query()->where('id', $id)->first()->name;
 
         return view('admin.place.images', compact(['files', 'name', 'id']));
     }
-    public function store(Request $request, $id)
+    public function store(Request $request, $id): RedirectResponse
     {
         $request->validate([
             'file' => ['required', 'array'],
@@ -184,7 +186,7 @@ class AdminPlaceController extends Controller
         }
         return redirect()->back()->with('success', 'Images uploaded successfully.');
     }
-    public function destroy($id, $image)
+    public function destroy($id, $image): RedirectResponse
     {
         $delete = PlaceFiles::query()
             ->where('place_id', $id)

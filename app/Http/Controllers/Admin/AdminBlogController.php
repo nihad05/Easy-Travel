@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\Comment;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AdminBlogController extends Controller
 {
@@ -46,38 +48,48 @@ class AdminBlogController extends Controller
 //            return back()->with('success', 'Blog added successfully!');
 //        }
 //    }
-    public function index()
+    public function index(): View
     {
         $category = BlogCategory::all();
+
         return view('admin.blogs.category.index', compact(['category']));
     }
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string']
         ]);
+
         $name = $request->name;
         $insert = BlogCategory::create([
             'name' => $name
         ]);
+
         if ($insert) {
             return back()->with('success', "Category added Blogs successfully");
         }
     }
-    public function comments($id)
+    public function comments($id): View
     {
-        $comments = Comment::where('entity_type', 'blog')->where("entity_id", $id)->with('users')->get();
+        $comments = Comment::query()
+            ->where('entity_type', 'blog')
+            ->where("entity_id", $id)
+            ->with('users')
+            ->get();
+
         return view('admin.blogs.comments.index', compact(['comments']));
     }
-    public function edit($id)
+    public function edit($id): View
     {
         $blog = Blog::with('author')->with('category')->where('id', $id)->first();
         $category = BlogCategory::all();
+
         return view('admin.blogs.edit', compact(['blog', 'category']));
     }
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
-        $blog = Blog::findOrFail($id);
+        $blog = Blog::query()->findOrFail($id);
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
@@ -86,6 +98,7 @@ class AdminBlogController extends Controller
         } else {
             $newFile = $blog->image;
         }
+
         $editArr = [
             'name' => $request->name,
             'description' => $request->description,
@@ -93,7 +106,9 @@ class AdminBlogController extends Controller
             'image' => $newFile,
             'category_id' => $request->category
         ];
+
         $edit = $blog->update($editArr);
+
         if ($edit) {
             return back()->with('success', "Blog edited successfully");
         }
@@ -108,10 +123,11 @@ class AdminBlogController extends Controller
 //        $blog->delete();
 //        return back()->with('success', 'Blog deleted successfully!');
 //    }
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
-        $category = BlogCategory::findOrFail($id);
+        $category = BlogCategory::query()->findOrFail($id);
         $category->delete();
+
         return back()->with('success', 'Category deleted successfully');
     }
 }
