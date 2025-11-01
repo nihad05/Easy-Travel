@@ -134,7 +134,7 @@ class TourController extends Controller
     public function update($id): RedirectResponse
     {
         $tour = Tour::withTrashed()->findOrFail($id);
-        $update = $tour->update(['status' => TourStatus::WAITING]);
+        $update = $tour->update(['status' => TourStatus::WAITING->value]);
 
         if ($update) {
             return back()->with('We accepted your request and turn back soon!');
