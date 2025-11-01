@@ -16,6 +16,7 @@ class AdminTourController extends Controller
 
         return view('admin.tours.index', compact(['tours']));
     }
+
     public function editPage(Request $request, $id): View
     {
         $tour = Tour::query()->findOrFail($id);
@@ -137,11 +138,12 @@ class AdminTourController extends Controller
             ],
             [
                 'name' => 'Bus',
-            ]
+            ],
         ];
 
         return view('admin.tours.edit', compact(['tour', 'places', 'transport', 'arr', 'arr2']));
     }
+
     public function edit(Request $request, $id): RedirectResponse
     {
         $tour = Tour::query()->findOrFail($id);
@@ -155,7 +157,7 @@ class AdminTourController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $newFile = time() . "." . $extension;
+            $newFile = time().'.'.$extension;
             $file->move(public_path('/images/tourImgs/'), $newFile);
         } else {
             $newFile = $tour->image;
@@ -172,9 +174,10 @@ class AdminTourController extends Controller
             'people' => $request->people,
             'image' => $newFile,
             'transport' => $transport,
-            'travel_places' => $places
+            'travel_places' => $places,
         ];
         $tour->update($editedArr);
+
         return back()->with('success', 'Tour Updated Successful!');
     }
 }

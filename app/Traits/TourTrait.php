@@ -18,6 +18,7 @@ trait TourTrait
                 'updated_at' => now(),
             ];
         }
+
         return $arr;
     }
 
@@ -33,16 +34,18 @@ trait TourTrait
                 'updated_at' => now(),
             ];
         }
+
         return $arr;
     }
 
-    public function tourCheck($id){
+    public function tourCheck($id)
+    {
         $tourPlan = Tour::query()
             ->where('id', $id)
             ->where('host_id', auth()->id())
             ->first();
 
-        if(!$tourPlan) {
+        if (! $tourPlan) {
             abort(404);
         }
 

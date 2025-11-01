@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Place;
 use App\Models\PlaceFiles;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -87,30 +86,31 @@ class AdminPlaceController extends Controller
         $place = Place::query()->findOrFail($place) ?? 1;
 
         if ($place->safety >= 0 && $place->safety <= 20) {
-            $safety = "Bad";
+            $safety = 'Bad';
         } elseif ($place->safety >= 21 && $place->safety <= 40) {
-            $safety = "Not bad";
+            $safety = 'Not bad';
         } elseif ($place->safety >= 41 && $place->safety <= 60) {
-            $safety = "Normal";
+            $safety = 'Normal';
         } elseif ($place->safety >= 61 && $place->safety <= 80) {
-            $safety = "Good";
+            $safety = 'Good';
         } else {
-            $safety = "Great";
+            $safety = 'Great';
         }
         if ($place->fun >= 0 && $place->fun <= 20) {
-            $fun = "Bad";
+            $fun = 'Bad';
         } elseif ($place->fun >= 21 && $place->fun <= 40) {
-            $fun = "Not bad";
+            $fun = 'Not bad';
         } elseif ($place->fun >= 41 && $place->fun <= 60) {
-            $fun = "Normal";
+            $fun = 'Normal';
         } elseif ($place->fun >= 61 && $place->fun <= 80) {
-            $fun = "Good";
+            $fun = 'Good';
         } else {
-            $fun = "Great";
+            $fun = 'Great';
         }
 
         return view('admin.place.editPlace', compact(['place', 'fun', 'safety']));
     }
+
     public function update(Request $request, $place): View
     {
         $editedPlace = Place::query()->findOrFail($place);
@@ -118,7 +118,7 @@ class AdminPlaceController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $newFile = time() . "." . $extension;
+            $newFile = time().'.'.$extension;
             $file->move(public_path('images/imgs'), $newFile);
         } else {
             $newFile = $img;
@@ -130,7 +130,7 @@ class AdminPlaceController extends Controller
             $safety *= rand(21, 40);
         } elseif ($request->safety == 'normal') {
             $safety *= rand(41, 60);
-        } elseif ($request->safety == "good") {
+        } elseif ($request->safety == 'good') {
             $safety *= rand(61, 80);
         } else {
             $safety *= rand(81, 100);
@@ -143,7 +143,7 @@ class AdminPlaceController extends Controller
             $fun *= rand(21, 40);
         } elseif ($request->fun == 'normal') {
             $fun *= rand(41, 60);
-        } elseif ($request->fun == "good") {
+        } elseif ($request->fun == 'good') {
             $fun *= rand(61, 80);
         } else {
             $fun *= rand(81, 100);
@@ -159,8 +159,10 @@ class AdminPlaceController extends Controller
             'image' => $newFile,
         ];
         $editedPlace->update($editArr);
+
         return back()->with('success', 'Place edited successfully');
     }
+
     public function index($id): View
     {
         $files = PlaceFiles::query()->where('place_id', $id)->get();
@@ -168,24 +170,27 @@ class AdminPlaceController extends Controller
 
         return view('admin.place.images', compact(['files', 'name', 'id']));
     }
+
     public function store(Request $request, $id): RedirectResponse
     {
         $request->validate([
             'file' => ['required', 'array'],
-            'file.*' => ['required']
+            'file.*' => ['required'],
         ]);
 
         foreach ($request->file('file') as $file) {
             $extension = $file->getClientOriginalExtension();
-            $newFileName = Str::uuid() . '.' . $extension;
+            $newFileName = Str::uuid().'.'.$extension;
             $file->move(public_path('/images/imgs'), $newFileName);
             $image = PlaceFiles::create([
                 'image' => $newFileName,
-                'place_id' => $id
+                'place_id' => $id,
             ]);
         }
+
         return redirect()->back()->with('success', 'Images uploaded successfully.');
     }
+
     public function destroy($id, $image): RedirectResponse
     {
         $delete = PlaceFiles::query()

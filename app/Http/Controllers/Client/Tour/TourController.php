@@ -5,20 +5,24 @@ namespace App\Http\Controllers\Client\Tour;
 use App\Enums\TourStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Tour\StoreRequest;
-use App\Models\{Place, Tour, TourPlace, TourTransport, Transport, User};
-use App\Traits\{MediaTrait, TourTrait};
-use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\View\{Factory, View};
+use App\Models\Place;
+use App\Models\Tour;
+use App\Models\TourPlace;
+use App\Models\TourTransport;
+use App\Models\Transport;
+use App\Models\User;
+use App\Traits\MediaTrait;
+use App\Traits\TourTrait;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 class TourController extends Controller
 {
-    use TourTrait, MediaTrait;
+    use MediaTrait, TourTrait;
 
-    /**
-     * @return Application|Factory|View
-     */
     public function index(): Factory|View|Application
     {
         $tours = Tour::withTrashed()->where('host_id', auth()->id())->get();
@@ -26,9 +30,6 @@ class TourController extends Controller
         return view('client.tourPlans.index', compact('tours'));
     }
 
-    /**
-     * @return Factory|View|Application
-     */
     public function create(): Factory|View|Application
     {
         $tourPlaces = Place::query()->select('id', 'name')->get();
@@ -37,10 +38,6 @@ class TourController extends Controller
         return view('client.tourPlans.create', compact(['tourPlaces', 'tourTransports']));
     }
 
-    /**
-     * @param StoreRequest $request
-     * @return RedirectResponse
-     */
     public function store(StoreRequest $request): RedirectResponse
     {
         $newFile = $this->uploadImage($request->file('image'), 'tourImgs');
@@ -54,7 +51,7 @@ class TourController extends Controller
             'people' => $request->people,
             'about' => $request->about,
             'host_id' => auth()->id(),
-            'image' => $newFile
+            'image' => $newFile,
         ]);
 
         TourPlace::query()->insert($this->prepareTourPlaces($request->places, $tour->id));
@@ -63,6 +60,7 @@ class TourController extends Controller
         if ($tour) {
             return redirect()->route('tourPlan.edit', ['tour' => $tour->id])->with(['step' => 2]);
         }
+
         return back()->with('error', 'Something went wrong!');
     }
 
@@ -81,16 +79,12 @@ class TourController extends Controller
         return view('client.tourPlans.show', compact('tour'));
     }
 
-    /**
-     * @param $id
-     * @return Application|Factory|View
-     */
     public function edit($id): Factory|View|Application
     {
         $tourPlan = Tour::withTrashed()->where('host_id', auth()->id())->findOrFail($id);
 
         $addedHotels = DB::table('properties as p')
-            ->select('p.id','p.name', 'p.location', 'p.price', 'ti.tour_id', 'pf.image',
+            ->select('p.id', 'p.name', 'p.location', 'p.price', 'ti.tour_id', 'pf.image',
                 DB::raw('CONCAT(p.price * t.people, " ", "₼") as total_price'), 'ti.id as item_id'
             )
             ->join('tour_items as ti', 'ti.entity_id', 'p.id')
@@ -127,10 +121,6 @@ class TourController extends Controller
         ]));
     }
 
-    /**
-     * @param $id
-     * @return RedirectResponse
-     */
     public function update($id): RedirectResponse
     {
         $tour = Tour::withTrashed()->findOrFail($id);
@@ -139,6 +129,7 @@ class TourController extends Controller
         if ($update) {
             return back()->with('We accepted your request and turn back soon!');
         }
+
         return back()->with('error', 'Something went wrong!');
     }
 
@@ -150,15 +141,14 @@ class TourController extends Controller
      */
     public function destroy($id)
     {
-         $tour = Tour::query()->withCount('users')->findOrFail($id);
+        $tour = Tour::query()->withCount('users')->findOrFail($id);
 
-         if($tour->users_count === 0) {
+        if ($tour->users_count === 0) {
             DB::table('tours')->where('id', $id)->delete();
-         }
-         $tour->delete();
+        }
+        $tour->delete();
 
-         return back()->with('success', 'Tour has been deleted!');
+        return back()->with('success', 'Tour has been deleted!');
 
     }
 }
-

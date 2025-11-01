@@ -6,15 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Permissions\StoreeRequest;
 use App\Http\Requests\Admin\Permissions\UpdateRequest;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\{Factory, View};
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-    /**
-     * @return Application|Factory|View
-     */
     public function index(): Factory|View|Application
     {
         $permissions = Permission::query()->select('id', 'name')->get();
@@ -32,15 +30,11 @@ class PermissionController extends Controller
         //
     }
 
-    /**
-     * @param StoreeRequest $request
-     * @return RedirectResponse
-     */
     public function store(StoreeRequest $request): RedirectResponse
     {
         Permission::query()->create([
             'name' => $request->name,
-            'guard' => 'admin'
+            'guard' => 'admin',
         ]);
 
         return back()->with('success', 'Permission created successfully');
@@ -81,6 +75,7 @@ class PermissionController extends Controller
     {
         $permission = Permission::query()->findOrFail($id);
         $permission->update($request->validated());
+
         return back()->with('success', 'Permission updated successfully');
     }
 
@@ -94,6 +89,7 @@ class PermissionController extends Controller
     {
         $permission = Permission::query()->findOrFail($id);
         $permission->delete();
+
         return back()->with('success', 'Permission deleted successfully');
     }
 }

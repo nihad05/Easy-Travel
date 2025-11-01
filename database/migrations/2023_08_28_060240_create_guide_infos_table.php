@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->integer('price');
             $table->text('about');
-            $table->text("languages");
-            $table->text("aviable_for");
+            $table->text('languages');
+            $table->text('aviable_for');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });

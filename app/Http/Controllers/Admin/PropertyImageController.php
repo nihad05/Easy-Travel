@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Property\Image\{IndexRequest, StoreRequest};
-use App\Models\{Property, PropertyFile};
-use Illuminate\Http\{Request, RedirectResponse};
+use App\Http\Requests\Admin\Property\Image\IndexRequest;
+use App\Http\Requests\Admin\Property\Image\StoreRequest;
+use App\Models\Property;
+use App\Models\PropertyFile;
 use App\Traits\MediaTrait;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\{Factory, View};
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class PropertyImageController extends Controller
 {
     use MediaTrait;
 
-    /**
-     * @param IndexRequest $request
-     * @return Application|Factory|View
-     */
     public function index(IndexRequest $request): Application|Factory|View
     {
         $property_id = $request->get('property_id');
@@ -40,10 +40,6 @@ class PropertyImageController extends Controller
         //
     }
 
-    /**
-     * @param StoreRequest $request
-     * @return RedirectResponse
-     */
     public function store(StoreRequest $request): RedirectResponse
     {
         $imageArr = [];
@@ -52,16 +48,16 @@ class PropertyImageController extends Controller
 
             $imageArr[] = [
                 'property_id' => $request->get('property_id'),
-                'image' => $newFile
+                'image' => $newFile,
             ];
         }
         $create = PropertyFile::query()->insert($imageArr);
 
         if ($create) {
-            return back()->with('success', "Images added successsfully");
+            return back()->with('success', 'Images added successsfully');
         }
 
-        return back()->with('error', "Please fill all inputs");
+        return back()->with('error', 'Please fill all inputs');
     }
 
     /**
@@ -98,17 +94,14 @@ class PropertyImageController extends Controller
         //
     }
 
-    /**
-     * @param $id
-     * @return RedirectResponse
-     */
     public function destroy($id): RedirectResponse
     {
         $item = PropertyFile::query()->findOrFail($id);
         $delete = $item->delete();
         if ($delete) {
-            return back()->with('success', "Image deleted successfully");
+            return back()->with('success', 'Image deleted successfully');
         }
-        return back()->with('error', "Please fill all inputs");
+
+        return back()->with('error', 'Please fill all inputs');
     }
 }

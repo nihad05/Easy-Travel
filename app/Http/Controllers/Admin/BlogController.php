@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Blog\{StoreRequest, UpdateRequest};
-use App\Models\{Blog, BlogCategory};
-use Illuminate\Http\{Request,RedirectResponse};
+use App\Http\Requests\Admin\Blog\StoreRequest;
+use App\Http\Requests\Admin\Blog\UpdateRequest;
+use App\Models\Blog;
+use App\Models\BlogCategory;
 use App\Traits\MediaTrait;
-use Illuminate\Contracts\View\{View, Factory};
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class BlogController extends Controller
 {
     use MediaTrait;
 
-    /**
-     * @return Application|Factory|View
-     */
     public function index(): Application|Factory|View
     {
         $category = BlogCategory::all();
@@ -38,7 +38,6 @@ class BlogController extends Controller
     }
 
     /**
-     * @param StoreRequest $request
      * @return RedirectResponse
      */
     public function store(StoreRequest $request)
@@ -50,11 +49,12 @@ class BlogController extends Controller
             'description' => $request->description,
             'short_description' => $request->short_description,
             'image' => $newFile,
-            'category_id' => $request->category
+            'category_id' => $request->category,
         ]);
         if ($insert) {
             return back()->with('success', 'Blog added successfully!');
         }
+
         return back()->with('error', 'Something went wrong!');
     }
 
@@ -80,9 +80,10 @@ class BlogController extends Controller
         $blog = Blog::query()->with(['author', 'category'])->where('id', $id)->first();
         $category = BlogCategory::all();
 
-        if(!$blog){
+        if (! $blog) {
             return back()->with('error', 'Blog not found!');
         }
+
         return view('admin.blogs.edit', compact(['blog', 'category']));
     }
 
@@ -107,25 +108,25 @@ class BlogController extends Controller
             'description' => $request->description,
             'short_description' => $request->short_description,
             'image' => $newFile,
-            'category_id' => $request->category
+            'category_id' => $request->category,
         ];
         $edit = $blog->update($editArr);
         if ($edit) {
-            return back()->with('success', "Blog edited successfully");
+            return back()->with('success', 'Blog edited successfully');
         }
     }
 
     /**
-     * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
         $blog = Blog::query()->findOrFail($id);
-        if(!$blog){
+        if (! $blog) {
             return back()->with('error', 'Blog not found!');
         }
         $blog->delete();
+
         return back()->with('success', 'Blog deleted successfully!');
     }
 }

@@ -24,7 +24,7 @@ class IndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'property_id' => 'required|integer|exists:properties,id'
+            'property_id' => 'required|integer|exists:properties,id',
         ];
     }
 }
