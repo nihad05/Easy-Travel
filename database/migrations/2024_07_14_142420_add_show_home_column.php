@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('place_files', function (Blueprint $table) {
-            $table->tinyInteger(   'show_home')->default(0);
+            $table->tinyInteger('show_home')->default(0);
         });
     }
 

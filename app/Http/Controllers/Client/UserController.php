@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Models\GuideBook;
-use App\Models\TourUser;
-use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\BookProperty;
+use App\Models\GuideBook;
 use App\Models\GuideInfo;
-use App\Models\HostRequest;
 use App\Models\Request;
 use App\Models\Tour;
+use App\Models\TourUser;
 use App\Models\User;
-use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller
 {
@@ -36,7 +33,6 @@ class UserController extends Controller
 
         $request = $requests->requests;
 
-
         return view('client.userPage.index', compact([
             'user',
             'request',
@@ -45,7 +41,7 @@ class UserController extends Controller
             'activeHotelsBookings',
             'pastHotelsBookings',
             'activeTour',
-            'pastTour'
+            'pastTour',
         ]));
     }
 
@@ -61,7 +57,7 @@ class UserController extends Controller
                 'p.id as p_id'
             )
             ->join('properties as p', 'p.id', 'bp.hotel_id')
-            ->join('property_files as pf', function ($propertyFile){
+            ->join('property_files as pf', function ($propertyFile) {
                 $propertyFile->on('pf.property_id', 'p.id')->where('pf.show_home', 1);
             })
             ->where(['bp.user_id' => auth()->id(), 'bp.is_active' => $status])
@@ -84,7 +80,7 @@ class UserController extends Controller
                 'u2.location',
             )
             ->join('users as u', 'u.id', 'gb.user_id')
-            ->join('users as u2', function ($guides){
+            ->join('users as u2', function ($guides) {
                 $guides->on('u2.id', 'gb.guide_id')->where('u2.role', 'guide');
             })
             ->join('guide_infos as gi', 'gi.user_id', 'guide_id')
@@ -101,15 +97,17 @@ class UserController extends Controller
             ->where(['tu.user_id' => auth()->id(), 't.status' => $status])
             ->get();
     }
+
     public function request($id)
     {
         $insert = Request::create([
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
         ]);
         if ($insert) {
             return back()->with('success', 'Your request has accepted successfully!');
         }
     }
+
     public function editProfile(\Illuminate\Http\Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -122,7 +120,7 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $file = request()->file('image');
             $extension = $file->getClientOriginalExtension();
-            $newFile = time() . "." . $extension;
+            $newFile = time().'.'.$extension;
             $file->move(public_path('/images/userImgs'), $newFile);
         } else {
             $newFile = $user->image;
@@ -135,8 +133,10 @@ class UserController extends Controller
             'image' => $newFile,
             'password' => $password,
         ]);
+
         return back()->with('success', 'User informations changed successfully!');
     }
+
     public function guide(\Illuminate\Http\Request $request)
     {
         $request->validate([
@@ -154,18 +154,19 @@ class UserController extends Controller
             'languages' => $language,
             'aviable_for' => $aviable,
             'about' => $about,
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
         $user = User::findOrFail(auth()->id());
         $guide = 'guide';
         $user->update([
-            'role' => $guide
+            'role' => $guide,
         ]);
         $request = Request::where('user_id', auth()->id())->first()->delete();
         if ($insert && $request) {
-            return back()->with('success', "You have been guide!");
+            return back()->with('success', 'You have been guide!');
         }
     }
+
     public function editGuide(\Illuminate\Http\Request $request, $id)
     {
         $guide = User::findOrFail($id);
@@ -182,7 +183,7 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $newFile = time() . "." . $extension;
+            $newFile = time().'.'.$extension;
             $file->move(public_path('/images/userImgs'), $newFile);
         } else {
             $newFile = $guide->image;
@@ -191,7 +192,7 @@ class UserController extends Controller
             'name' => $request->name,
             'location' => $request->location,
             'image' => $newFile,
-            'email' => $request->email
+            'email' => $request->email,
         ];
         $language = json_encode($request->language);
         $aviable = json_encode($request->aviable);
@@ -200,39 +201,44 @@ class UserController extends Controller
             'aviable_for' => $aviable,
             'languages' => $language,
             'price' => $request->price,
-            'user_id' => $id
+            'user_id' => $id,
         ];
         if ($user && $guideArr) {
             $guide->update($user);
             $guideInfo->update($guideArr);
+
             return back()->with('success', 'Your informations changed successfully');
         }
 
     }
+
     public function host($id)
     {
         $request = Request::create([
             'type' => 'host',
-            'user_id' => $id
+            'user_id' => $id,
         ]);
         if ($request) {
             return back()->with('success', 'Your request to be host has accepted !');
         }
     }
+
     public function userBlogEdit($id)
     {
         $blogs = Blog::with('author')->where('user_id', $id)->get();
         $categories = BlogCategory::all();
         $title = 'Edit Blog';
+
         return view('client.userPage.editBlog', compact(['blogs', 'title', 'categories']));
     }
+
     public function editedBlog(\Illuminate\Http\Request $request, $id)
     {
         $blog = Blog::findOrFail($id);
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $newFile = time() . "." . $extension;
+            $newFile = time().'.'.$extension;
             $file->move(public_path('/images/blogImgs'), $newFile);
         } else {
             $newFile = $blog->image;
@@ -245,32 +251,38 @@ class UserController extends Controller
             'category_id' => $blog->category_id,
         ];
         $blog->update($editedArr);
+
         return back()->with('success', 'Your blog updated successfully!');
     }
+
     public function editPage($id)
     {
         $blog = Blog::findOrFail($id);
-        $title = "Edit" . $blog->name;
+        $title = 'Edit'.$blog->name;
+
         return view('client.userPage.editPage', compact(['title', 'blog']));
     }
+
     public function deleteBlog($id)
     {
         $blog = Blog::findOrFail($id);
         if ($blog != null) {
             $blog->delete();
+
             return back()->with('success', 'Blog deleted successfully');
         }
     }
+
     public function tourEdit($id)
     {
         $blog = Tour::withTrashed()->findOrFail($id);
-        $title = "Edit Tour";
+        $title = 'Edit Tour';
+
         return view('client.userPage.editTour', compact('blog', 'title'));
     }
-    public function tourPage($id)
-    {
 
-    }
+    public function tourPage($id) {}
+
     public function tour_edit(\Illuminate\Http\Request $request, $id)
     {
         $tour = Tour::findOrFail($id);
@@ -286,7 +298,7 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $newFile = time() . "." . $extension;
+            $newFile = time().'.'.$extension;
             $file->move(public_path('/images/tourImgs/'), $newFile);
         } else {
             $newFile = $tour->image;
@@ -302,12 +314,14 @@ class UserController extends Controller
             'image' => $newFile,
         ];
         $tour->update($editedArr);
+
         return back()->with('success', 'Tour Updated Successful!');
     }
+
     public function deleteTour($id)
     {
         $tour = Tour::findOrFail($id)->delete();
-        return back()->with('success', "Tour deleted successfully");
-    }
 
+        return back()->with('success', 'Tour deleted successfully');
+    }
 }

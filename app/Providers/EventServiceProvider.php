@@ -24,7 +24,7 @@ class EventServiceProvider extends ServiceProvider
         OrderPlaces::class => [
             WriteLog::class,
             WriteLog2::class,
-        ]
+        ],
     ];
 
     /**

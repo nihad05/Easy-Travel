@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,10 +18,12 @@ class Tour extends Model
     {
         return $this->hasMany(TourItem::class, 'tour_id')->where('entity_type', 'place');
     }
+
     public function guides(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TourItem::class, 'tour_id')->where('entity_type', 'guide');
     }
+
     public function host()
     {
         return $this->hasOne(User::class, 'id', 'host_id');

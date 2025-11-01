@@ -13,6 +13,6 @@ class PropertySupply extends Model
 
     protected $fillable = [
         'property_id',
-        'supply_id'
+        'supply_id',
     ];
 }

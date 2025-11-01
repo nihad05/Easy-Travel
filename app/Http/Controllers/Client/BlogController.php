@@ -28,6 +28,7 @@ class BlogController extends Controller
 
         return view('client.blogs.index', compact(['blogs', 'recoBlogs', 'title', 'category']));
     }
+
     public function details($id): View
     {
         $blog = Blog::with('author')->where('id', $id)->first();
@@ -49,6 +50,7 @@ class BlogController extends Controller
             return view('client.blogs.details', compact(['blog', 'comments', 'title']));
         }
     }
+
     public function create(Request $request)
     {
         $user = User::findOrFail(auth()->id());
@@ -66,7 +68,7 @@ class BlogController extends Controller
         if ($request->hasFile('blogImage')) {
             $file = $request->file('blogImage');
             $extension = $file->getClientOriginalExtension();
-            $newFile = time() . "." . $extension;
+            $newFile = time().'.'.$extension;
             $file->move(public_path('/images/blogImgs'), $newFile);
         }
         $insert = Blog::create([
@@ -75,12 +77,13 @@ class BlogController extends Controller
             'description' => $request->blogDescription,
             'category_id' => $c_id,
             'user_id' => auth()->id(),
-            'image' => $newFile
+            'image' => $newFile,
         ]);
         if ($insert) {
             return back()->with('success', 'Your blog has added successfully');
         }
     }
+
     public function search()
     {
         if (request()->has('category') && request()->get('category') != null) {
@@ -90,9 +93,10 @@ class BlogController extends Controller
             foreach ($blog as $item) {
                 $blogs = $item['blogs'];
             }
+
             return response()->json([
                 'data' => $blogs,
-                'status' => 200
+                'status' => 200,
             ], 200);
         }
     }

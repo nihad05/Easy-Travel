@@ -19,9 +19,6 @@ class PlaceFiles extends Model
         'show_home',
     ];
 
-    /**
-     * @return HasOne
-     */
     public function place(): HasOne
     {
         return $this->hasOne(Place::class, 'id', 'place_id');

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class GuideInfo extends Model
 {
     use HasFactory;
+
     protected $table = 'guide_infos';
+
     protected $guarded = [];
 }

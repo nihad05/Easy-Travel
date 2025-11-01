@@ -14,6 +14,6 @@ class TourTransport extends Model
      */
     protected $fillable = [
         'tour_id',
-        'place_id'
+        'place_id',
     ];
 }
