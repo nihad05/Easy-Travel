@@ -1,6 +1,6 @@
 <?php
-namespace App\queryFilterGuide;
 
+namespace App\queryFilterGuide;
 
 class Name
 {
@@ -11,7 +11,8 @@ class Name
             return $next($request);
         }
         $bulider = $next($request);
-        return $bulider->where('name', 'like', "%" . $name . "%");
+
+        return $bulider->where('name', 'like', '%'.$name.'%');
 
     }
 }

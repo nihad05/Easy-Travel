@@ -11,7 +11,7 @@ class CommentsController extends Controller
     public function placeComment(Request $request, $id)
     {
         $request->validate([
-            'comment' => ['required']
+            'comment' => ['required'],
         ]);
         $entityType = 'place';
         $userId = auth()->id();
@@ -20,16 +20,17 @@ class CommentsController extends Controller
             'entity_type' => $entityType,
             'entity_id' => $id,
             'user_id' => $userId,
-            'body' => $body
+            'body' => $body,
         ]);
         if ($insert) {
             return back()->with('success', 'Comment added successfully!');
         }
     }
+
     public function propertyComment(Request $request, $id)
     {
         $request->validate([
-            'comment' => ['required']
+            'comment' => ['required'],
         ]);
         $entityType = 'property';
         $userId = auth()->id();
@@ -38,16 +39,17 @@ class CommentsController extends Controller
             'entity_type' => $entityType,
             'entity_id' => $id,
             'user_id' => $userId,
-            'body' => $body
+            'body' => $body,
         ]);
         if ($insert) {
             return back()->with('success', 'Comment added successfully!');
         }
     }
+
     public function guideComment(Request $request, $id)
     {
         $request->validate([
-            'comment' => ['required']
+            'comment' => ['required'],
         ]);
         $entityType = 'guide';
         $userId = auth()->id();
@@ -56,16 +58,17 @@ class CommentsController extends Controller
             'entity_type' => $entityType,
             'entity_id' => $id,
             'user_id' => $userId,
-            'body' => $body
+            'body' => $body,
         ]);
         if ($insert) {
             return back()->with('success', 'Comment added successfully!');
         }
     }
+
     public function blogComment(Request $request, $id)
     {
         $request->validate([
-            'comment' => ['required']
+            'comment' => ['required'],
         ]);
         $entityType = 'blog';
         $userId = auth()->id();
@@ -74,7 +77,7 @@ class CommentsController extends Controller
             'entity_type' => $entityType,
             'entity_id' => $id,
             'user_id' => $userId,
-            'body' => $body
+            'body' => $body,
         ]);
         if ($insert) {
             return back()->with('success', 'Comment added successfully!');

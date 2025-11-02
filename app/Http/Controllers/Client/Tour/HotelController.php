@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class HotelController extends Controller
 {
     /**
-     * @param $id
+     * @param  $id
      * @return JsonResponse
      */
     public function index($tour_id)
@@ -28,7 +28,7 @@ class HotelController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $hotels
+            'data' => $hotels,
         ], 200);
     }
 
@@ -45,7 +45,6 @@ class HotelController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $id)
@@ -53,8 +52,8 @@ class HotelController extends Controller
         $insert = TourItem::query()->create([
             'entity_type' => 'place',
             'entity_id' => $request->id,
-            "tour_id" => $id,
-            'host_id' => auth()->id()
+            'tour_id' => $id,
+            'host_id' => auth()->id(),
         ]);
 
         if ($insert) {
@@ -87,7 +86,6 @@ class HotelController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -107,7 +105,7 @@ class HotelController extends Controller
         //
     }
 
-    public function search($keyword = 'null', $tour_id)
+    public function search($keyword, $tour_id)
     {
         $hotels = Property::query()
             ->from('properties as p')
@@ -116,13 +114,13 @@ class HotelController extends Controller
                 'ti.entity_id', '=', 'p.id')
             ->leftJoin('tours as t', 't.id', '=', 'ti.tour_id');
 
-        if($keyword != 'null'){
-            $hotels = $hotels->where(DB::raw('LOWER(p.name)'), 'like', '%' . $keyword . '%');
+        if ($keyword != 'null') {
+            $hotels = $hotels->where(DB::raw('LOWER(p.name)'), 'like', '%'.$keyword.'%');
         }
         $hotels = $hotels->whereNull('t.id')->orderBy('name')->get();
 
         return response()->json([
-            'data' => $hotels
+            'data' => $hotels,
         ]);
     }
 }

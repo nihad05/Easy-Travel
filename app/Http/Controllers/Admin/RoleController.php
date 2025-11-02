@@ -3,20 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Roles\StoreRequest;
+use App\Http\Requests\Admin\Roles\UpdateRequest;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\Admin\Roles\{UpdateRequest, StoreRequest};
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\{Factory, View};
-use Illuminate\Http\RedirectResponse;
-
 
 class RoleController extends Controller
 {
-    /**
-     * @return Application|Factory|View
-     */
     public function index(): Factory|View|Application
     {
         $roles = Role::query()->select('id', 'name', 'created_at')->get();
@@ -35,15 +33,11 @@ class RoleController extends Controller
         //
     }
 
-    /**
-     * @param StoreRequest $request
-     * @return RedirectResponse
-     */
     public function store(StoreRequest $request): RedirectResponse
     {
         $role = Role::query()->create([
             'name' => $request->name,
-            'guard_name' => 'admin'
+            'guard_name' => 'admin',
         ]);
 
         $arr = [];
@@ -71,10 +65,6 @@ class RoleController extends Controller
         //
     }
 
-    /**
-     * @param $id
-     * @return Application|Factory|View
-     */
     public function edit(int $id): Factory|View|Application
     {
         $role = Role::query()->findOrFail($id);
@@ -83,11 +73,6 @@ class RoleController extends Controller
         return view('admin.role.edit', compact(['role', 'permissions']));
     }
 
-    /**
-     * @param UpdateRequest $request
-     * @param $id
-     * @return RedirectResponse
-     */
     public function update(UpdateRequest $request, $id): RedirectResponse
     {
         $role = Role::query()->findOrFail($id);
@@ -97,10 +82,6 @@ class RoleController extends Controller
         return back()->with('success', 'Role updated successfully');
     }
 
-    /**
-     * @param int $id
-     * @return RedirectResponse
-     */
     public function destroy(int $id): RedirectResponse
     {
         $role = Role::query()->findOrFail($id);

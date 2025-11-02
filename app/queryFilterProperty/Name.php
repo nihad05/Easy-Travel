@@ -1,4 +1,5 @@
 <?php
+
 namespace App\queryFilterProperty;
 
 use Closure;
@@ -12,6 +13,7 @@ class Name
             return $next($request);
         }
         $builder = $next($request);
-        return $builder->where('name', 'like', "%" . $name . "%");
+
+        return $builder->where('name', 'like', '%'.$name.'%');
     }
 }

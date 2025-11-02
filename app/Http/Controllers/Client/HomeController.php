@@ -7,16 +7,15 @@ use App\Models\Place;
 use App\Models\Property;
 use App\Models\Tour;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
 {
     public function index()
     {
 
-        if (auth()->user() && auth()->user() != null)
+        if (auth()->user() && auth()->user() != null) {
             $image = User::findOrFail(auth()->id())->image;
+        }
 
         $guide = User::with('guides')
             ->with('comments')
@@ -43,7 +42,7 @@ class HomeController extends Controller
         $tours = Tour::withTrashed()
             ->select('t.*', 'tt.status')
             ->from('tours as t')
-            ->join('tour_transactions as tt', 'tt.tour_id',  't.id')
+            ->join('tour_transactions as tt', 'tt.tour_id', 't.id')
             ->where('tt.status', 1)
             ->get();
 
@@ -54,5 +53,4 @@ class HomeController extends Controller
         }
 
     }
-
 }

@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 
 class AboutController extends Controller
 {
     public function index()
     {
         $title = 'About Us';
-        return view("client.aboutPage.index", compact("title"));
+
+        return view('client.aboutPage.index', compact('title'));
     }
 
     // public function functionName(Request $request) {

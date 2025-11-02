@@ -45,38 +45,47 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function requests()
     {
         return $this->hasOne(Request::class, 'user_id', 'id');
     }
+
     public function guides()
     {
         return $this->hasOne(GuideInfo::class, 'user_id', 'id');
     }
+
     public function blogs()
     {
         return $this->hasMany(Blog::class, 'user_id', 'id');
     }
+
     public function comments()
     {
         return $this->hasMany(Comment::class, 'entity_id')->where('entity_type', 'guide');
     }
+
     public function selections()
     {
         return $this->hasOne(Selection::class, 'entity_id', 'id')->where('entity_type', 'guide')->where('user_id', auth()->id());
     }
+
     public function items()
     {
         return $this->hasMany(Selection::class, 'user_id')->where('entity_type', 'place');
     }
+
     public function favProperty()
     {
         return $this->hasMany(Selection::class, 'user_id')->where('entity_type', 'property');
     }
+
     public function favGuide()
     {
         return $this->hasMany(Selection::class, 'user_id')->where('entity_type', 'guide');
     }
+
     protected $with = ['guides'];
 
     public function tour_guide()

@@ -8,8 +8,6 @@ class StepOneRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -24,17 +22,17 @@ class StepOneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "tourName" => 'required',
-            "startLocation" => 'required', 'string',
-            "price" => 'required', "integer",
-            "transports" => 'required|array',
-            "transports.*" => 'integer',
-            "places" => 'required|array',
-            "places.*" => 'required|integer',
-            "startDate" => 'required',
-            "endDate" => 'required',
-            "people" => 'required',
-            "about" => 'required',
+            'tourName' => 'required',
+            'startLocation' => 'required', 'string',
+            'price' => 'required', 'integer',
+            'transports' => 'required|array',
+            'transports.*' => 'integer',
+            'places' => 'required|array',
+            'places.*' => 'required|integer',
+            'startDate' => 'required',
+            'endDate' => 'required',
+            'people' => 'required',
+            'about' => 'required',
             'image' => 'required|mimes:jpeg,jpg,png,avif',
         ];
     }

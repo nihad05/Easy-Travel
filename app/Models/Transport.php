@@ -13,6 +13,6 @@ class Transport extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 }

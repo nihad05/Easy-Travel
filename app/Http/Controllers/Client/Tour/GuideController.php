@@ -18,7 +18,7 @@ class GuideController extends Controller
      */
     public function index($id)
     {
-         $gudies = User::query()
+        $gudies = User::query()
             ->without('guides')
             ->from('users as u')
             ->select(
@@ -37,11 +37,11 @@ class GuideController extends Controller
             ->leftJoin('tours as t', 't.id', 'ti.tour_id')
             ->whereNull('t.id')
             ->where('u.role', 'guide')
-             ->orderBy('name')
+            ->orderBy('name')
             ->get();
 
         return response([
-            'data' => $gudies
+            'data' => $gudies,
         ], 200);
     }
 
@@ -55,11 +55,6 @@ class GuideController extends Controller
         //
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request, $id): RedirectResponse
     {
         $insert = TourItem::query()
@@ -67,11 +62,12 @@ class GuideController extends Controller
                 'entity_type' => 'guide',
                 'entity_id' => $request->userId,
                 'tour_id' => $id,
-                'host_id' => auth()->id()
+                'host_id' => auth()->id(),
             ]);
         if ($insert) {
             return back()->with('success', 'Guide added this tour successfully!');
         }
+
         return back()->with('error', 'Something went wrong!');
     }
 
@@ -100,7 +96,6 @@ class GuideController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -142,14 +137,14 @@ class GuideController extends Controller
             ->whereNull('t.id')
             ->where('u.role', 'guide');
 
-            if($keyword != null){
-                $guides = $guides->where('u.name', 'like', '%' . $keyword . '%');
-            }
+        if ($keyword != null) {
+            $guides = $guides->where('u.name', 'like', '%'.$keyword.'%');
+        }
 
-            $guides = $guides->orderBy('name')->get();
+        $guides = $guides->orderBy('name')->get();
 
         return response([
-            'data' => $guides
+            'data' => $guides,
         ], 200);
     }
 }

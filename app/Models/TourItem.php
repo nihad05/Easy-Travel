@@ -4,9 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Place;
-use App\Models\User;
-
 
 class TourItem extends Model
 {
@@ -19,8 +16,9 @@ class TourItem extends Model
         'entity_type',
         'entity_id',
         'host_id',
-        'tour_id'
+        'tour_id',
     ];
+
     public function hotel()
     {
         return $this->hasOne(Property::class, 'id', 'entity_id');

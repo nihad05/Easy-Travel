@@ -1,4 +1,5 @@
 <?php
+
 namespace App\queryFilter;
 
 use Closure;
@@ -12,7 +13,8 @@ class Location
             return $next($request);
         }
         $bulider = $next($request);
-        return $bulider->where('location', 'like', "%" . $name . "%");
+
+        return $bulider->where('location', 'like', '%'.$name.'%');
 
     }
 }
