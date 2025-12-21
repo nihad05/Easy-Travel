@@ -16,24 +16,27 @@ class AdminUserController extends Controller
 
         return view('admin.users.index', compact(['users']));
     }
+
     public function edit($id): View
     {
         $user = User::query()->findOrFail($id);
 
         return view('admin.users.editRole', compact('user'));
     }
+
     public function update(Request $request, $id): RedirectResponse
     {
         $role = $request->role;
         $user = User::query()->findOrFail($id);
 
         $user->update([
-            'role' => $role
+            'role' => $role,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'Role updated successfully!');
     }
-    public function block($id): RedirectResponse|null
+
+    public function block($id): ?RedirectResponse
     {
         $user = User::query()->findOrFail($id);
         $delete = $user->delete();
@@ -42,6 +45,7 @@ class AdminUserController extends Controller
             return redirect()->route('admin.users.index')->with('success', 'User blocked!');
         }
     }
+
     public function guideInfo($id): View
     {
         $guide = User::query()->findOrFail($id);

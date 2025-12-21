@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\{Request, RedirectResponse};
-
 
 class BlogCommentController extends Controller
 {
@@ -19,7 +19,7 @@ class BlogCommentController extends Controller
     {
         $comments = Comment::query()
             ->where('entity_type', 'blog')
-            ->where("entity_id", $request->get('blog_id'))
+            ->where('entity_id', $request->get('blog_id'))
             ->with('users')
             ->get();
 
@@ -81,18 +81,15 @@ class BlogCommentController extends Controller
         //
     }
 
-    /**
-     * @param $id
-     * @return RedirectResponse
-     */
     public function destroy($id): RedirectResponse
     {
         $comment = Comment::query()->findOrFail($id);
 
-        if(!$comment){
+        if (! $comment) {
             return back()->with('error', 'Comment not found');
         }
         $comment->delete();
+
         return back()->with('success', 'Comment deleted successfully');
     }
 }

@@ -21,10 +21,10 @@ return new class extends Migration
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
 
-//            $table->foreign('tour_id')->references('id')->on('tours')
-//                ->onDelete('cascade');
-//            $table->foreign('user_id')->references('id')->on('users')
-//                ->onDelete('cascade');
+            //            $table->foreign('tour_id')->references('id')->on('tours')
+            //                ->onDelete('cascade');
+            //            $table->foreign('user_id')->references('id')->on('users')
+            //                ->onDelete('cascade');
         });
     }
 

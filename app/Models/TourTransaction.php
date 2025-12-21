@@ -13,9 +13,9 @@ class TourTransaction extends Model
      * @var string[]
      */
     protected $fillable = [
-        "tour_id",
-        "user_id",
-        "price",
-        "status",
+        'tour_id',
+        'user_id',
+        'price',
+        'status',
     ];
 }

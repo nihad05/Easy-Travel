@@ -2,36 +2,35 @@
 
 namespace App\Services\Client\Tour;
 
-use App\Http\Requests\Client\Tour\CreateRequest;
 use App\Http\Requests\Client\Tour\StoreRequest;
-use App\Models\{
-    HostRequest,
-    Place,
-    Property,
-    TourPlace,
-    Tour,
-    TourTransaction,
-    TourTransport,
-    Transport,
-    User};
-use App\Traits\{MediaTrait, TourTrait};
+use App\Models\Place;
+use App\Models\Property;
+use App\Models\Tour;
+use App\Models\TourPlace;
+use App\Models\TourTransaction;
+use App\Models\TourTransport;
+use App\Models\Transport;
+use App\Models\User;
+use App\Traits\MediaTrait;
+use App\Traits\TourTrait;
 
 class TourService
 {
     use MediaTrait, TourTrait;
+
     public function storeFirstStep(StoreRequest $request)
     {
         $request->validate([
-            "tourName" => ['required'],
-            "startLocation" => ['required', 'string'],
-            "price" => ['required', "integer"],
-            "transports" => ['required'],
-            "places" => ['required'],
-            "startDate" => ['required'],
-            "endDate" => ['required'],
-            "people" => ['required'],
-            "about" => ['required'],
-            'image' => ['required']
+            'tourName' => ['required'],
+            'startLocation' => ['required', 'string'],
+            'price' => ['required', 'integer'],
+            'transports' => ['required'],
+            'places' => ['required'],
+            'startDate' => ['required'],
+            'endDate' => ['required'],
+            'people' => ['required'],
+            'about' => ['required'],
+            'image' => ['required'],
         ]);
 
         $newFile = $this->uploadImage($request->file('image'), 'tourImgs');
@@ -45,7 +44,7 @@ class TourService
             'people' => $request->people,
             'about' => $request->about,
             'host_id' => auth()->id(),
-            'image' => $newFile
+            'image' => $newFile,
         ]);
 
         TourPlace::query()->insert($this->prepareTourPlaces($request->places, $insert->id));
@@ -54,13 +53,11 @@ class TourService
         if ($insert) {
             return redirect()->route('tourPlan.create', ['step' => 2, 'id' => $insert->id]);
         }
+
         return back()->with('error', 'Something went wrong!');
     }
 
-    public function storeSecondStep(int $tour_id)
-    {
-
-    }
+    public function storeSecondStep(int $tour_id) {}
 
     public function storeThirdStep($tour_id, StoreRequest $request)
     {
@@ -68,7 +65,7 @@ class TourService
             'cardNumber' => 'required|integer',
             'expirationDate' => 'required|integer',
             'cvc' => 'required|integer',
-            'price' => 'required|integer'
+            'price' => 'required|integer',
         ]);
 
         $transaction = TourTransaction::query()
@@ -77,17 +74,18 @@ class TourService
             ->where('status', 0)
             ->first();
 
-        if(!$transaction){
+        if (! $transaction) {
             abort(404);
         }
         $transaction->update([
             'status' => 1,
-            'price' => $request->price
+            'price' => $request->price,
         ]);
 
         return to_route('tourPlan.create', ['step' => 4]);
 
     }
+
     public function createFirstStep()
     {
         $tourPlaces = Place::query()->select('id', 'name')->get();
@@ -101,8 +99,8 @@ class TourService
         $tourPlan = $this->tourCheck($id);
 
         $hotels = Property::query()
-            ->with(['tour_property' => function($q) use ($id){
-                $q->where('host_id', auth()->id())->where('entity_type', "place")->where('tour_id', $id);
+            ->with(['tour_property' => function ($q) use ($id) {
+                $q->where('host_id', auth()->id())->where('entity_type', 'place')->where('tour_id', $id);
             }, 'image'])
             ->orderBy('name')
             ->get();
@@ -110,9 +108,8 @@ class TourService
         $addedHotels = $hotels->whereNotNull('tour_property');
         $hotels = $hotels->whereNull('tour_property');
 
-
         $guides = User::query()
-            ->with(['tour_guide' => function($query) use ($id){
+            ->with(['tour_guide' => function ($query) use ($id) {
                 $query->where('host_id', auth()->id())->where('entity_type', 'guide')->where('tour_id', $id);
             }])
             ->where('role', 'guide')
@@ -132,11 +129,7 @@ class TourService
         ]));
     }
 
-    public function createThirdStep($tour_id, $price)
-    {
-
-
-    }
+    public function createThirdStep($tour_id, $price) {}
 
     public function createFourthStep()
     {

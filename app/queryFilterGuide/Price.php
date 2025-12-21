@@ -1,4 +1,5 @@
 <?php
+
 namespace App\queryFilterGuide;
 
 use Closure;
@@ -17,7 +18,7 @@ class Price
         } elseif ($maxPrice != null && $minPrice == null) {
             return $builder->with('guides')->whereBetween('price', ['<=', $maxPrice]);
         } else {
-            $builder;
+
         }
     }
 }
