@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -46,49 +48,49 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function requests()
+    protected $with = ['guides'];
+
+    public function requests(): HasOne
     {
         return $this->hasOne(Request::class, 'user_id', 'id');
     }
 
-    public function guides()
+    public function guides(): HasOne
     {
         return $this->hasOne(GuideInfo::class, 'user_id', 'id');
     }
 
-    public function blogs()
+    public function blogs(): HasMany
     {
         return $this->hasMany(Blog::class, 'user_id', 'id');
     }
 
-    public function comments()
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'entity_id')->where('entity_type', 'guide');
     }
 
-    public function selections()
+    public function selections(): HasOne
     {
         return $this->hasOne(Selection::class, 'entity_id', 'id')->where('entity_type', 'guide')->where('user_id', auth()->id());
     }
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(Selection::class, 'user_id')->where('entity_type', 'place');
     }
 
-    public function favProperty()
+    public function favProperty(): HasMany
     {
         return $this->hasMany(Selection::class, 'user_id')->where('entity_type', 'property');
     }
 
-    public function favGuide()
+    public function favGuide(): HasMany
     {
         return $this->hasMany(Selection::class, 'user_id')->where('entity_type', 'guide');
     }
 
-    protected $with = ['guides'];
-
-    public function tour_guide()
+    public function tour_guide(): HasOne
     {
         return $this->hasOne(TourItem::class, 'entity_id', 'id');
     }
