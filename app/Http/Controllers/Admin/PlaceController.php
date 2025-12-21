@@ -3,28 +3,32 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Place\StoreRequest;
+use App\Http\Requests\Admin\Place\UpdateRequest;
 use App\Models\Place;
 use App\Models\PlaceFiles;
-use Exception;
-use Illuminate\Http\{Response, Request, RedirectResponse};
-use Illuminate\Contracts\View\{Factory, View};
-use App\Http\Requests\Admin\Place\{StoreRequest, UpdateRequest};
 use App\Traits\MediaTrait;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 
 class PlaceController extends Controller
 {
     use MediaTrait;
+
     /**
      * Display a listing of the resource.
      *
      * @return Response|Factory|View
      */
-    public function index()//: Response|Factory|View
+    public function index()// : Response|Factory|View
     {
         $place = Place::query()
             ->from('places as p')
-            ->select( "p.id as pId", 'p.name', 'p.price', 'p.location', "pf.image as image", "pf.show_home")
-            ->join('place_files as pf', 'pf.place_id', '=','p.id')
+            ->select('p.id as pId', 'p.name', 'p.price', 'p.location', 'pf.image as image', 'pf.show_home')
+            ->join('place_files as pf', 'pf.place_id', '=', 'p.id')
             ->where('pf.show_home', 1)
             ->paginate(5);
 
@@ -39,10 +43,6 @@ class PlaceController extends Controller
         //
     }
 
-    /**
-     * @param StoreRequest $request
-     * @return RedirectResponse
-     */
     public function store(StoreRequest $request): RedirectResponse
     {
         try {
@@ -52,10 +52,10 @@ class PlaceController extends Controller
 
             PlaceFiles::query()
                 ->create([
-                'image' => $this->uploadImage($request->file('image'), 'imgs'),
-                'show_home' => 1,
-                'place_id' => $place->id
-            ]);
+                    'image' => $this->uploadImage($request->file('image'), 'imgs'),
+                    'show_home' => 1,
+                    'place_id' => $place->id,
+                ]);
 
             return back()->with('success', 'Created Successfully');
         } catch (Exception) {
@@ -65,10 +65,11 @@ class PlaceController extends Controller
 
     /**
      * Summary of edit
-     * @param mixed $place
+     *
+     * @param  mixed  $place
      * @return Factory|View
      */
-    public function edit($place)//: Factory|View
+    public function edit($place)// : Factory|View
     {
         $place = Place::query()->findOrFail($place);
         $image = PlaceFiles::query()
@@ -76,16 +77,18 @@ class PlaceController extends Controller
             ->where('show_home', 1)
             ->first()->image;
 
-        if(!$place)
+        if (! $place) {
             to_route('admin.notfound');
+        }
 
         return view('admin.place.editPlace', compact(['place', 'image']));
     }
 
     /**
      * Summary of update
-     * @param \Illuminate\Http\Request $request
-     * @param mixed $place
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $place
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateRequest $request, $place): RedirectResponse
@@ -112,20 +115,22 @@ class PlaceController extends Controller
         if ($update) {
             return back()->with('success', 'Place edited successfully');
         }
+
         return back()->with('error', 'Something went wrong');
     }
 
     /**
      * Summary of destroy
-     * @param mixed $place
-     * @return RedirectResponse
+     *
+     * @param  mixed  $place
      */
     public function destroy($place): RedirectResponse
     {
         $delete = Place::query()->findOrFail($place)->delete();
 
-        if($delete)
+        if ($delete) {
             return back()->with('success', 'Place deleted successfully');
+        }
 
         return back()->with('error', 'Something went wrong');
     }

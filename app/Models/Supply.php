@@ -13,6 +13,6 @@ class Supply extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 }

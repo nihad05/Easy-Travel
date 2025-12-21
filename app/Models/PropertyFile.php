@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class PropertyFile extends Model
 {
     use HasFactory;
-    protected $table = "property_files";
+
+    protected $table = 'property_files';
+
     protected $guarded = [];
 }

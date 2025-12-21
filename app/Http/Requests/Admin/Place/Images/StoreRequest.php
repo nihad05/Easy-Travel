@@ -8,10 +8,8 @@ class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize():bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -26,7 +24,7 @@ class StoreRequest extends FormRequest
         return [
             'id' => 'required|integer|exists:places,id',
             'file' => 'required|array',
-            'file.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10000'
+            'file.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10000',
         ];
     }
 }

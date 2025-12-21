@@ -1,25 +1,24 @@
 <?php
 
 use App\Http\Controllers\AboutController;
-use App\Http\Controllers\Client\{
-    BlogController,
-    CommentsController,
-    DetailsController,
-    HomeController,
-    PaymentController,
-    SearchController,
-    SelectionController,
-    TourController,
-    UserControllerResource,
-    UserController
-};
+use App\Http\Controllers\Client\BlogController;
+use App\Http\Controllers\Client\CommentsController;
+use App\Http\Controllers\Client\DetailsController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\PaymentController;
+use App\Http\Controllers\Client\SearchController;
+use App\Http\Controllers\Client\SelectionController;
+use App\Http\Controllers\Client\Tour\GuideController;
+use App\Http\Controllers\Client\Tour\HotelController;
 use App\Http\Controllers\Client\Tour\TourController as ClientTourController;
-use App\Http\Controllers\Client\Tour\{HotelController, GuideController};
+use App\Http\Controllers\Client\TourController;
+use App\Http\Controllers\Client\UserController;
+use App\Http\Controllers\Client\UserControllerResource;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/ammemedov', function (){
+Route::get('/ammemedov', function () {
     $place = \App\Models\Place::query()->findOrFail(9);
-   \App\Events\OrderPlaces::dispatch($place);
+    \App\Events\OrderPlaces::dispatch($place);
 });
 Route::resource('nihad', UserControllerResource::class);
 
@@ -30,12 +29,12 @@ Route::group(['as' => 'home.', 'prefix' => 'home'], function () {
     Route::get('/tour-{id}-detalis', [DetailsController::class, 'tourDetails'])->name('tourDetails');
     Route::get('/join-tour/{id}', [TourController::class, 'tourJoin'])->name('tourJoin');
     Route::group(['as' => 'comments.', 'prefix' => 'comments'], function () {
-        Route::post("/place/{id}", [CommentsController::class, 'placeComment'])->name('placeComment');
-        Route::post("/property/{id}", [CommentsController::class, 'propertyComment'])->name('propertyComment');
-        Route::post("/guide/{id}", [CommentsController::class, 'guideComment'])->name('guideComment');
-        Route::post("/blog/{id}", [CommentsController::class, 'blogComment'])->name('blogComment');
+        Route::post('/place/{id}', [CommentsController::class, 'placeComment'])->name('placeComment');
+        Route::post('/property/{id}', [CommentsController::class, 'propertyComment'])->name('propertyComment');
+        Route::post('/guide/{id}', [CommentsController::class, 'guideComment'])->name('guideComment');
+        Route::post('/blog/{id}', [CommentsController::class, 'blogComment'])->name('blogComment');
     });
-    Route::group(['as' => 'search.', 'prefix' => "search"], function () {
+    Route::group(['as' => 'search.', 'prefix' => 'search'], function () {
         Route::get('/place', [SearchController::class, 'searchMain'])->name('searchMain');
         Route::get('/property', [SearchController::class, 'searchProperty'])->name('searchProperty');
         Route::get('/guide', [SearchController::class, 'searchGuide'])->name('searchGuide');
@@ -46,14 +45,14 @@ Route::group(['as' => 'about.', 'prefix' => 'about'], function () {
     Route::get('/about', [AboutController::class, 'index'])->name('aboutPage');
 });
 Route::group(['as' => 'payment.', 'prefix' => 'payment'], function () {
-    Route::get('/{id}/property', [PaymentController::class, 'index'])->name("index");
-    Route::get('/{id}/guide', [PaymentController::class, 'guide'])->name("guide");
-    Route::post('/{id}/guidePay', [PaymentController::class, 'guidePay'])->name("guidePay");
-    Route::post('/{id}/property/book', [PaymentController::class, 'propertyBook'])->name("propertyBook");
+    Route::get('/{id}/property', [PaymentController::class, 'index'])->name('index');
+    Route::get('/{id}/guide', [PaymentController::class, 'guide'])->name('guide');
+    Route::post('/{id}/guidePay', [PaymentController::class, 'guidePay'])->name('guidePay');
+    Route::post('/{id}/property/book', [PaymentController::class, 'propertyBook'])->name('propertyBook');
 });
 Route::group(['as' => 'blogs.', 'prefix' => 'blogs'], function () {
     Route::get('/', [BlogController::class, 'index'])->name('blogs');
-    Route::get("/details/{id}", [BlogController::class, 'details'])->name('blogDetails');
+    Route::get('/details/{id}', [BlogController::class, 'details'])->name('blogDetails');
     Route::post('/blogCreate', [BlogController::class, 'create'])->name('create');
     Route::get('/search', [BlogController::class, 'search'])->name('search');
 });
@@ -79,12 +78,12 @@ Route::group(['as' => 'tourPlan.', 'prefix' => 'tour-plan', 'middleware' => 'hos
     Route::get('/{id}', [ClientTourController::class, 'show'])->name('show');
     Route::delete('/{id}', [ClientTourController::class, 'destroy'])->name('destroy');
 });
-Route::group(['as' => "user.", 'prefix' => 'user'], function () {
+Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
     Route::get('/{id}', [UserController::class, 'index'])->name('page');
-    Route::get("/request/{id}", [UserController::class, 'request'])->name('request');
+    Route::get('/request/{id}', [UserController::class, 'request'])->name('request');
     Route::post('/edit-profile/{id}', [UserController::class, 'editProfile'])->name('editProfile');
     Route::post('/edit-guide/{id}', [UserController::class, 'editGuide'])->name('editGuide');
-    Route::post("/to-guide", [UserController::class, 'guide'])->name('guide');
+    Route::post('/to-guide', [UserController::class, 'guide'])->name('guide');
     Route::get('/editBlog/{id}', [UserController::class, 'userBlogEdit'])->name('userBlogEdit');
     Route::get('/edit-page/{id}', [UserController::class, 'editPage'])->name('editPage');
     Route::post('/editedBlog/{id}', [UserController::class, 'editedBlog'])->name('blog.edit');
@@ -106,7 +105,6 @@ Route::group(['as' => 'selection.', 'prefix' => 'selection'], function () {
     Route::get('property', [SelectionController::class, 'propertyFav'])->name('propertyFav');
     Route::get('guide', [SelectionController::class, 'guideFav'])->name('guideFav');
 });
-
 
 \Illuminate\Support\Facades\Auth::routes();
 Route::get('/register/confirm/{id}', [\App\Http\Controllers\Auth\RegisterController::class, 'confirmRegister'])

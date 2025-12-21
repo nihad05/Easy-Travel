@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\{Request, RedirectResponse};
-use Illuminate\Contracts\View\{View,Factory};
-use Illuminate\Contracts\Foundation\Application;
 use App\Traits\Messages;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     use Messages;
-    /**
-     * @return Application|Factory|View
-     */
+
     public function index(): Application|Factory|View
     {
         $users = User::query()->paginate(10);
@@ -43,68 +43,59 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * @param $id
-     * @return Application|Factory|View|RedirectResponse
-     */
     public function show($id): Application|Factory|View|RedirectResponse
     {
         $guide = User::query()->findOrFail($id);
 
         if ($guide->role == 'guide' && $guide) {
-            return view('admin.users.guide', compact('guide' ));
+            return view('admin.users.guide', compact('guide'));
         }
+
         return back()->with('error', self::$WRONG);
     }
 
-    /**
-     * @param $id
-     * @return Application|Factory|View|RedirectResponse
-     */
     public function edit($id): Application|Factory|View|RedirectResponse
     {
         $user = User::query()->findOrFail($id);
-        if(!$user)
+        if (! $user) {
             return back()->with('error', self::$USER_NOT_FOUND);
+        }
 
         return view('admin.users.editRole', compact('user'));
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return RedirectResponse
-     */
     public function update(Request $request, $id): RedirectResponse
     {
         $user = User::query()->findOrFail($id);
 
-        if(!$user)
+        if (! $user) {
             return back()->with('error', self::$USER_NOT_FOUND);
+        }
 
         $user->update([
-            'role' => $request->role
+            'role' => $request->role,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', self::$ROLE_UPDATED);
     }
 
     /**
-     * @param $id
      * @return RedirectResponse|void
      */
     public function destroy($id)
     {
         $user = User::query()->findOrFail($id);
 
-        if(!$user)
+        if (! $user) {
             return back()->with('error', self::$USER_NOT_FOUND);
+        }
 
         $delete = $user->delete();
 
         if ($delete) {
             return redirect()->route('admin.users.index')->with('success', self::$USER_BLOCKED);
         }
+
         return back()->with('error', self::$WRONG);
     }
 }

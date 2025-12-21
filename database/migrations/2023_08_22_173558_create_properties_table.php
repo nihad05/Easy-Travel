@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -14,15 +15,15 @@ return new class extends Migration {
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->text("description");
+            $table->string('name');
+            $table->text('description');
             $table->string('location');
             $table->integer('price');
             $table->integer('stars');
             $table->integer('bed_count');
             $table->integer('bath_count');
             $table->integer('sqft_count');
-            $table->string('extras'); //jsonb
+            $table->string('extras'); // jsonb
             $table->timestamps();
         });
     }

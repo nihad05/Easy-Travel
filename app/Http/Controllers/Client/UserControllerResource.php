@@ -35,9 +35,7 @@ class UserControllerResource extends Controller
             ->from('guide_books as gb')
             ->join('users as u', 'u.id', 'gb.user_id');
 
-
         $bookings = BookProperty::query()->where('user_id', auth()->id())->with('hotel')->get();
-
 
         foreach ($guideBookings as $item) {
             $guideEndTime = $item->end_date;
@@ -45,17 +43,17 @@ class UserControllerResource extends Controller
             if ($day[2] == $finish[2]) {
                 $booking = GuideBook::findOrFail($item->id);
                 $booking->update([
-                    'is_active' => 1
+                    'is_active' => 1,
                 ]);
             }
         }
         foreach ($bookings as $item) {
             $bookingEndTime = $item->end_time;
-            $end = explode("-", $bookingEndTime);
+            $end = explode('-', $bookingEndTime);
             if ($day[2] == $end[2]) {
                 $update = BookProperty::findOrFail($item->id);
                 $update->update([
-                    'is_active' => 1
+                    'is_active' => 1,
                 ]);
             }
         }
@@ -133,7 +131,6 @@ class UserControllerResource extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -166,7 +163,6 @@ class UserControllerResource extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

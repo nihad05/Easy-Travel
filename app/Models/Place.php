@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Place extends Model
 {
@@ -20,20 +21,14 @@ class Place extends Model
         'fun',
         'internet',
         'price',
-        'location'
+        'location',
     ];
 
-    /**
-     * @return HasMany
-     */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'entity_id')->where('entity_type', 'place');
     }
 
-    /**
-     * @return HasOne
-     */
     public function selections(): HasOne
     {
         return $this->hasOne(Selection::class, 'entity_id', 'id')

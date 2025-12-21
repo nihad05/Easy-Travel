@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Login\StoreRequest;
-use App\Models\Admin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -39,9 +37,10 @@ class LoginController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])){
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
             return to_route('admin.dashboard');
         }
+
         return back()->with('error', 'email or password is wrong');
     }
 
@@ -70,7 +69,6 @@ class LoginController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

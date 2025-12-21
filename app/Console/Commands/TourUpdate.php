@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Tour;
-use Illuminate\Console\Command;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class TourUpdate extends Command
 {
