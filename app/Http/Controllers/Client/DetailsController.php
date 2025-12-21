@@ -7,15 +7,12 @@ use App\Models\BookProperty;
 use App\Models\Comment;
 use App\Models\Place;
 use App\Models\PlaceFiles;
-use App\Models\PropertySupply;
+use App\Models\Property;
+use App\Models\PropertyFile;
 use App\Models\Supply;
 use App\Models\Tour;
 use App\Models\TourUser;
 use App\Models\User;
-use Illuminate\Support\Facades\Route;
-use App\Models\Property;
-use App\Models\PropertyFile;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DetailsController extends Controller
@@ -40,26 +37,26 @@ class DetailsController extends Controller
         $title = $details->name;
 
         if ($details->safety >= 0 && $details->safety <= 20) {
-            $safety = "Bad";
+            $safety = 'Bad';
         } elseif ($details->safety >= 21 && $details->safety <= 40) {
-            $safety = "Not bad";
+            $safety = 'Not bad';
         } elseif ($details->safety >= 41 && $details->safety <= 60) {
-            $safety = "Normal";
+            $safety = 'Normal';
         } elseif ($details->safety >= 61 && $details->safety <= 80) {
-            $safety = "Good";
+            $safety = 'Good';
         } else {
-            $safety = "Great";
+            $safety = 'Great';
         }
         if ($details->fun >= 0 && $details->fun <= 20) {
-            $fun = "Bad";
+            $fun = 'Bad';
         } elseif ($details->fun >= 21 && $details->fun <= 40) {
-            $fun = "Not bad";
+            $fun = 'Not bad';
         } elseif ($details->fun >= 41 && $details->fun <= 60) {
-            $fun = "Normal";
+            $fun = 'Normal';
         } elseif ($details->fun >= 61 && $details->fun <= 80) {
-            $fun = "Good";
+            $fun = 'Good';
         } else {
-            $fun = "Great";
+            $fun = 'Great';
         }
 
         $comments = Comment::query()
@@ -68,19 +65,18 @@ class DetailsController extends Controller
             ->where('entity_type', 'place')
             ->get();
 
-            return view(
-                'client.details.place.index',
-                compact([
-                    'details',
-                    'title',
-                    'safety',
-                    'images',
-                    'comments',
-                    'recGuide',
-                    'recommendedPlaces'
-                    , "fun"
-                ])
-            );
+        return view(
+            'client.details.place.index',
+            compact([
+                'details',
+                'title',
+                'safety',
+                'images',
+                'comments',
+                'recGuide',
+                'recommendedPlaces', 'fun',
+            ])
+        );
     }
 
     public function property($id)
@@ -88,7 +84,6 @@ class DetailsController extends Controller
         $element = Property::query()
             ->with(['comments', 'supplies'])
             ->findOrFail($id);
-
 
         $title = $element->name;
 
@@ -98,13 +93,11 @@ class DetailsController extends Controller
             ->where('property_id', $id)
             ->get();
 
-
         $recoProperty = Property::query()
             ->with('homeImage')
             ->limit(4)
             ->inRandomOrder()
             ->get();
-
 
         $recGuide = User::query()
             ->with('guides')
@@ -152,7 +145,7 @@ class DetailsController extends Controller
     public function guide($id)
     {
         $guide = User::query()
-            ->with("guides")
+            ->with('guides')
             ->where('id', $id)
             ->first();
 
@@ -192,7 +185,7 @@ class DetailsController extends Controller
                     'comments',
                     'places',
                     'guides',
-                    ])
+                ])
             );
         } else {
             return view(
@@ -219,11 +212,11 @@ class DetailsController extends Controller
             ->get();
 
         $tourUsers = TourUser::query()
-                ->from('tour_users as tu')
-                ->select('tu.id', 'u.image')
-                ->join('users as u', 'u.id', 'tu.user_id')
-                ->where('tu.tour_id', $id)
-                ->get();
+            ->from('tour_users as tu')
+            ->select('tu.id', 'u.image')
+            ->join('users as u', 'u.id', 'tu.user_id')
+            ->where('tu.tour_id', $id)
+            ->get();
 
         $user = TourUser::query()->where(['tour_id' => $id, 'user_id' => auth()->id()])->first();
 

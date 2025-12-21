@@ -8,8 +8,6 @@ class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -24,16 +22,16 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "tourName" => 'required',
-            "startLocation" => 'required|string',
-            "price" => 'required|integer',
-            "transports" => 'required',
-            "places" => 'required',
-            "startDate" => 'required',
-            "endDate" => 'required',
-            "people" => 'required',
-            "about" => 'required',
-            'image' => 'required'
+            'tourName' => 'required',
+            'startLocation' => 'required|string',
+            'price' => 'required|integer',
+            'transports' => 'required',
+            'places' => 'required',
+            'startDate' => 'required',
+            'endDate' => 'required',
+            'people' => 'required',
+            'about' => 'required',
+            'image' => 'required',
         ];
     }
 }

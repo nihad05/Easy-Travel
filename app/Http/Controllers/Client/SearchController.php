@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Models\GuideInfo;
 use App\Models\Place;
 use App\Models\Property;
 use App\Models\User;
@@ -27,8 +26,10 @@ class SearchController extends Controller
         $place = $places->paginate(8);
 
         $title = 'Search';
+
         return view('client.search.index', compact('place', 'title'));
     }
+
     public function searchProperty()
     {
         $properties = new Property;
@@ -47,16 +48,17 @@ class SearchController extends Controller
         return view('client.search.property', compact('property', 'title'));
 
     }
+
     public function searchGuide()
     {
         $guides = User::where('role', 'guide')->with('guides');
         if (request()->has('name') && request()->get('name') != null) {
             $name = request()->get('name');
-            $guides->where('name', 'like', "%" . $name . "%");
+            $guides->where('name', 'like', '%'.$name.'%');
         }
         if (request()->has('location') && request()->get('location') != null) {
             $location = request()->get('location');
-            $guides->where('location', 'like', "%" . $location . "%");
+            $guides->where('location', 'like', '%'.$location.'%');
         }
         $minPrice = request()->get('minPrice');
         $maxPrice = request()->get('maxPrice');
@@ -78,6 +80,7 @@ class SearchController extends Controller
         $title = 'Search';
 
         $guide = $guides->paginate(9);
+
         return view('client.search.guide', compact('guide', 'title'));
     }
 }

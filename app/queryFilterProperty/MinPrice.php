@@ -1,7 +1,6 @@
 <?php
-namespace App\queryFilterProperty;
 
-use Closure;
+namespace App\queryFilterProperty;
 
 class MinPrice
 {

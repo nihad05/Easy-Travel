@@ -4,7 +4,12 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Tour\Pay\StoreRequest;
-use App\Models\{BookProperty, GuideBook, Property, Tour, TourTransaction, User};
+use App\Models\BookProperty;
+use App\Models\GuideBook;
+use App\Models\Property;
+use App\Models\Tour;
+use App\Models\TourTransaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -17,8 +22,10 @@ class PaymentController extends Controller
         $rooms = $property->bed_count / 2;
         $room = floor($rooms);
         $title = 'Booking';
-        return view('client.payments.property', compact(['property', 'title', "count", "room"]));
+
+        return view('client.payments.property', compact(['property', 'title', 'count', 'room']));
     }
+
     public function propertyBook(Request $request, $id)
     {
         $request->validate([
@@ -36,38 +43,41 @@ class PaymentController extends Controller
             'end_time' => $request->endDate,
             'room_count' => $request->rooms,
             'hotel_id' => $id,
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
         if ($insert) {
             return back()->with('success', 'You booked hotel successfully');
         }
     }
+
     public function guide($id)
     {
         $guide = User::findOrFail($id);
         $title = 'Booking';
+
         return view('client.payments.guide', compact(['guide', 'title']));
     }
+
     public function guidePay($id, Request $request)
     {
         $request->validate([
-            "startDate" => ['required'],
-            "endDate" => ['required'],
-            "totalPrice" => ['required'],
-            "cardType" => ['required'],
-            "cardNumber" => ['required', 'integer'],
-            "expiration" => ['required', 'integer'],
-            "cvv" => ['required', 'integer'],
-            "street" => ['required'],
-            "city" => ['required'],
-            "zipCode" => ['required'],
-            "suit" => ['required'],
-            "state" => ['required'],
-            "country" => ['required']
+            'startDate' => ['required'],
+            'endDate' => ['required'],
+            'totalPrice' => ['required'],
+            'cardType' => ['required'],
+            'cardNumber' => ['required', 'integer'],
+            'expiration' => ['required', 'integer'],
+            'cvv' => ['required', 'integer'],
+            'street' => ['required'],
+            'city' => ['required'],
+            'zipCode' => ['required'],
+            'suit' => ['required'],
+            'state' => ['required'],
+            'country' => ['required'],
         ]);
 
-        $guide = new GuideBook();
+        $guide = new GuideBook;
         $guide->create([
             'start_date' => $request->startDate,
             'end_date' => $request->endDate,
@@ -79,10 +89,10 @@ class PaymentController extends Controller
             'suit' => $request->suit,
             'country' => $request->country,
             'user_id' => auth()->id(),
-            'guide_id' => $id
+            'guide_id' => $id,
         ]);
         if ($guide) {
-            return back()->with('success', "You booked guide successfully");
+            return back()->with('success', 'You booked guide successfully');
         }
     }
 
@@ -96,7 +106,7 @@ class PaymentController extends Controller
                 'tour_id' => $tour_id,
                 'user_id' => $tour->host_id,
                 'price' => $price,
-                'status' => 0
+                'status' => 0,
             ]);
 
         return to_route('tourPlan.payment.page', $tour->id)->with('price', $price);
@@ -125,7 +135,7 @@ class PaymentController extends Controller
 
         $transaction->update([
             'status' => 1,
-            'price' => $request->price
+            'price' => $request->price,
         ]);
 
         return to_route('tourPlan.approved');
